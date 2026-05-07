@@ -1,5 +1,5 @@
 import Foundation
-import TTLockOnPremise
+import TTLockSDK
 
 private func parseJsonArrayString(_ json: String?) -> [[String: Any]] {
   guard
