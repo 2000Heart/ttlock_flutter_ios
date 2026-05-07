@@ -17,7 +17,7 @@ iOS implementation for ttlock_flutter.
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
 #   s.vendored_frameworks = "Frameworks/**/*.framework"
-  s.dependency 'TTLock', '3.6.8'
+  s.dependency 'TTLockOnPremise', '2.2.2'
   s.static_framework = true
   s.swift_version = '5.0'
 
@@ -29,6 +29,6 @@ iOS implementation for ttlock_flutter.
     # TTLock.framework exposes both the module name and the main class as `TTLock`.
     # Qualifiers like `TTLock.TTLockConfigType` bind to the class, not the module.
     # Import the same binary under an alias so `TTLockSDK.*` refers to module types.
-    'OTHER_SWIFT_FLAGS' => '$(inherited) -module-alias TTLockSDK=TTLock'
+    'OTHER_SWIFT_FLAGS' => '$(inherited) -module-alias TTLockSDK=TTLockOnPremise'
   }
 end
