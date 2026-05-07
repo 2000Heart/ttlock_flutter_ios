@@ -168,8 +168,8 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
         TtlockPremiseNewArchError.notImplemented("accessory.standaloneDoorSensorReadFeatureValue")))
   }
 
-  func standaloneDoorSensorIsSupportFunction(featureValue: String, function: Int64) throws -> Bool {
-    //    return TTStandaloneDoorSensor.supportFunction(Int(function), featureValue: featureValue)
+  func standaloneDoorSensorIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool {
+    //    return TTStandaloneDoorSensor.supportFunction(Int(lockFunction), featureValue: featureValue)
     throw TtlockPremiseNewArchError.notImplemented(
       "accessory.standaloneDoorSensorIsSupportFunction")
   }
@@ -344,8 +344,8 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
       .failure(TtlockPremiseNewArchError.notImplemented("accessory.waterMeterGetDeviceInfo")))
   }
 
-  func waterMeterIsSupportFunction(featureValue: String, function: Int64) throws -> Bool {
-    //    return TTWaterMeter.supportFunction(Int(function), featureValue: featureValue)
+  func waterMeterIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool {
+    //    return TTWaterMeter.supportFunction(Int(lockFunction), featureValue: featureValue)
     throw TtlockPremiseNewArchError.notImplemented("accessory.waterMeterIsSupportFunction")
   }
 
@@ -541,8 +541,8 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
       .failure(TtlockPremiseNewArchError.notImplemented("accessory.electricMeterGetFeatureValue")))
   }
 
-  func electricMeterIsSupportFunction(featureValue: String, function: Int64) throws -> Bool {
-    //    return TTElectricMeter.supportFunction(Int(function), featureValue: featureValue)
+  func electricMeterIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool {
+    //    return TTElectricMeter.supportFunction(Int(lockFunction), featureValue: featureValue)
     throw TtlockPremiseNewArchError.notImplemented("accessory.electricMeterIsSupportFunction")
   }
 

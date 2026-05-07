@@ -27,7 +27,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
-  ttlock_flutter_ios: b1b90c8246c5717f8def91860029110acc6dca93
+  ttlock_flutter_ios: ae9e765981e906c00867a9f47e82695cc7fac320
   TTLockOnPremise: d232e24622a05cb4b42cc218ec5fa9a886a8baa5
 
 PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
