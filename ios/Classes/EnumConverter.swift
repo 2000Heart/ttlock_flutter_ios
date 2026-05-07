@@ -181,8 +181,8 @@ func remoteAccessoryConvert(_ accessory: TTRemoteAccessory) -> TTLockSDK.TTAcces
   }
 }
 
-func featureValueConvert(_ function: TTLockFunction) -> TTLockFeatureValue? {
-  switch function {
+func featureValueConvert(_ lockFunction: TTLockFunction) -> TTLockFeatureValue? {
+  switch lockFunction {
   case .passcode:
     return TTLockFeatureValue.passcode
   case .icCard:

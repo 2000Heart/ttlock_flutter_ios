@@ -2113,7 +2113,7 @@ protocol TTLockHostApi {
   func verifyLock(lockMac: String, completion: @escaping (Result<Void, Error>) -> Void)
   func controlLock(lockData: String, action: TTControlAction, completion: @escaping (Result<ControlLockResult, Error>) -> Void)
   func getLockSwitchState(lockData: String, completion: @escaping (Result<TTLockSwitchState, Error>) -> Void)
-  func supportFunction(function: TTLockFunction, lockData: String) throws -> Bool
+  func supportFunction(lockFunction: TTLockFunction, lockData: String) throws -> Bool
   func createCustomPasscode(passcode: String, startDate: Int64, endDate: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
   func modifyPasscode(passcodeOrigin: String, passcodeNew: String?, startDate: Int64, endDate: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
   func deletePasscode(passcode: String, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
@@ -2342,10 +2342,10 @@ class TTLockHostApiSetup {
     if let api = api {
       supportFunctionChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let functionArg = args[0] as! TTLockFunction
+        let lockFunctionArg = args[0] as! TTLockFunction
         let lockDataArg = args[1] as! String
         do {
-          let result = try api.supportFunction(function: functionArg, lockData: lockDataArg)
+          let result = try api.supportFunction(lockFunction: lockFunctionArg, lockData: lockDataArg)
           reply(wrapResult(result))
         } catch {
           reply(wrapError(error))
@@ -3727,7 +3727,7 @@ protocol TTAccessoryHostApi {
   func initDoorSensor(mac: String, lockData: String, completion: @escaping (Result<TTLockSystemModel, Error>) -> Void)
   func standaloneDoorSensorInit(mac: String, info: [String: Any?], completion: @escaping (Result<TTStandaloneDoorSensorInfo, Error>) -> Void)
   func standaloneDoorSensorReadFeatureValue(mac: String, completion: @escaping (Result<String, Error>) -> Void)
-  func standaloneDoorSensorIsSupportFunction(featureValue: String, function: Int64) throws -> Bool
+  func standaloneDoorSensorIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool
   func waterMeterConfigServer(url: String, clientId: String, accessToken: String) throws
   func waterMeterConnect(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
   func waterMeterDisconnect(mac: String) throws
@@ -3742,7 +3742,7 @@ protocol TTAccessoryHostApi {
   func waterMeterSetTotalUsage(waterMeterId: String, totalM3: Double, completion: @escaping (Result<Void, Error>) -> Void)
   func waterMeterGetFeatureValue(waterMeterId: String, completion: @escaping (Result<String, Error>) -> Void)
   func waterMeterGetDeviceInfo(waterMeterId: String, completion: @escaping (Result<WaterMeterDeviceInfo, Error>) -> Void)
-  func waterMeterIsSupportFunction(featureValue: String, function: Int64) throws -> Bool
+  func waterMeterIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool
   func waterMeterConfigApn(apn: String, completion: @escaping (Result<Void, Error>) -> Void)
   func waterMeterConfigMeterServer(ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void)
   func waterMeterReset(waterMeterId: String, completion: @escaping (Result<Void, Error>) -> Void)
@@ -3759,7 +3759,7 @@ protocol TTAccessoryHostApi {
   func electricMeterCharge(electricMeterId: String, amount: Double, completion: @escaping (Result<Void, Error>) -> Void)
   func electricMeterSetMaxPower(electricMeterId: String, maxPower: Double, completion: @escaping (Result<Void, Error>) -> Void)
   func electricMeterGetFeatureValue(electricMeterId: String, completion: @escaping (Result<String, Error>) -> Void)
-  func electricMeterIsSupportFunction(featureValue: String, function: Int64) throws -> Bool
+  func electricMeterIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -3932,9 +3932,9 @@ class TTAccessoryHostApiSetup {
       standaloneDoorSensorIsSupportFunctionChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let featureValueArg = args[0] as! String
-        let functionArg = args[1] as! Int64
+        let lockFunctionArg = args[1] as! Int64
         do {
-          let result = try api.standaloneDoorSensorIsSupportFunction(featureValue: featureValueArg, function: functionArg)
+          let result = try api.standaloneDoorSensorIsSupportFunction(featureValue: featureValueArg, lockFunction: lockFunctionArg)
           reply(wrapResult(result))
         } catch {
           reply(wrapError(error))
@@ -4189,9 +4189,9 @@ class TTAccessoryHostApiSetup {
       waterMeterIsSupportFunctionChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let featureValueArg = args[0] as! String
-        let functionArg = args[1] as! Int64
+        let lockFunctionArg = args[1] as! Int64
         do {
-          let result = try api.waterMeterIsSupportFunction(featureValue: featureValueArg, function: functionArg)
+          let result = try api.waterMeterIsSupportFunction(featureValue: featureValueArg, lockFunction: lockFunctionArg)
           reply(wrapResult(result))
         } catch {
           reply(wrapError(error))
@@ -4481,9 +4481,9 @@ class TTAccessoryHostApiSetup {
       electricMeterIsSupportFunctionChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let featureValueArg = args[0] as! String
-        let functionArg = args[1] as! Int64
+        let lockFunctionArg = args[1] as! Int64
         do {
-          let result = try api.electricMeterIsSupportFunction(featureValue: featureValueArg, function: functionArg)
+          let result = try api.electricMeterIsSupportFunction(featureValue: featureValueArg, lockFunction: lockFunctionArg)
           reply(wrapResult(result))
         } catch {
           reply(wrapError(error))

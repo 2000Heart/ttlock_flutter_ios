@@ -162,8 +162,8 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
     }
   }
 
-  func supportFunction(function: TTLockFunction, lockData: String) throws -> Bool {
-    guard let featureValue = featureValueConvert(function) else {
+  func supportFunction(lockFunction: TTLockFunction, lockData: String) throws -> Bool {
+    guard let featureValue = featureValueConvert(lockFunction) else {
       return false
     }
     return TTUtil.isSupportFeature(featureValue, lockData: lockData)
