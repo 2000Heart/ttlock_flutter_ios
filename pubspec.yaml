@@ -12,7 +12,10 @@ dependencies:
   flutter:
     sdk: flutter
   ttlock_flutter_platform_interface:
-    path: ../ttlock_flutter_platform_interface
+    git: 
+      url: https://github.com/ttlock/ttlock_flutter.git
+      path: ttlock_flutter_platform_interface
+      ref: mix
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
