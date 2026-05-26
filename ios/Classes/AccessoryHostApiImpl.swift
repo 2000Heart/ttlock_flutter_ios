@@ -6,9 +6,12 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   private let context: EventContextStore
   init(context: EventContextStore) { self.context = context }
 
-  func setEventKeypadMac(mac: String, isMultifunctional: Bool) throws {
-    context.keypadMac = mac
-    context.isMultifunctionalKeypad = isMultifunctional
+  func setAccessoryAddKeypadFingerprintParam(param: TTKeypadCredentialEventParam) throws {
+    context.accessoryAddKeypadFingerprint.apply(param)
+  }
+
+  func setAccessoryAddKeypadCardParam(param: TTKeypadCredentialEventParam) throws {
+    context.accessoryAddKeypadCard.apply(param)
   }
 
   func initRemoteKey(

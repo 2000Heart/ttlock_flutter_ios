@@ -257,9 +257,11 @@ packages:
   ttlock_flutter_platform_interface:
     dependency: transitive
     description:
-      path: "../../ttlock_flutter_platform_interface"
-      relative: true
-    source: path
+      path: ttlock_flutter_platform_interface
+      ref: mix
+      resolved-ref: abe232cac085d85c01c394f2f69a78eb21484f2b
+      url: "https://github.com/ttlock/ttlock_flutter.git"
+    source: git
     version: "0.0.3"
   vector_math:
     dependency: transitive
