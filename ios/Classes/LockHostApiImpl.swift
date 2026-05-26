@@ -58,8 +58,20 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   private let context: EventContextStore
   init(context: EventContextStore) { self.context = context }
 
-  func setEventLockData(lockData: String) throws {
-    context.lockData = lockData
+  func setLockScanWifiParam(param: TTLockScanWifiEventParam) throws {
+    context.lockScanWifi.lockData = param.lockData
+  }
+
+  func setLockAddCardParam(param: TTLockCredentialEventParam) throws {
+    context.lockAddCard.apply(param)
+  }
+
+  func setLockAddFingerprintParam(param: TTLockCredentialEventParam) throws {
+    context.lockAddFingerprint.apply(param)
+  }
+
+  func setLockAddFaceParam(param: TTLockCredentialEventParam) throws {
+    context.lockAddFace.apply(param)
   }
 
   func getBluetoothState() throws -> TTBluetoothState {

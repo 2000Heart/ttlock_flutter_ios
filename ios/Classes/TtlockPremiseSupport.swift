@@ -70,26 +70,66 @@ func makeMultifunctionalKeypadApiError(
   return PigeonError(code: "\(mapped.rawValue)", message: message ?? fallback, details: operation)
 }
 
+/// 各 EventChannel 专用参数槽，由对应 HostApi `set*Param` 写入。
 final class EventContextStore {
   static let shared = EventContextStore()
   private init() {}
 
-  var lockData: String?
-  var gatewayMac: String?
-  var keypadMac: String?
-  var isMultifunctionalKeypad = false
-
-  /// 与 Android `LockStreamParams` 对齐：加卡/指纹/人脸等流使用的周期配置与有效期（毫秒）。未设置时由宿主使用默认时间窗。
-  var streamCyclicConfigMaps: [[AnyHashable: Any]]?
-  var streamValidityStartMs: Int64?
-  var streamValidityEndMs: Int64?
-
-  func validityRangeForAddOperations() -> (start: Int64, end: Int64, cyclic: [[AnyHashable: Any]]?) {
-    let nowMs = Int64(Date().timeIntervalSince1970 * 1000)
-    let start = streamValidityStartMs ?? nowMs
-    let end = streamValidityEndMs ?? (nowMs + 30 * 24 * 3600 * 1000)
-    return (start, end, streamCyclicConfigMaps)
+  struct LockScanWifiSlot {
+    var lockData: String?
   }
+
+  struct LockCredentialSlot {
+    var lockData: String?
+    var cycleList: [[String: Any]]?
+    var startDateMs: Int64 = 0
+    var endDateMs: Int64 = 0
+
+    mutating func apply(_ param: TTLockCredentialEventParam) {
+      lockData = param.lockData
+      startDateMs = param.startDate
+      endDateMs = param.endDate
+      cycleList = param.cycleList?.map { $0.toMap() }
+    }
+
+    func cyclicConfigForSdk() -> [[String: Any]] {
+      cycleList ?? []
+    }
+  }
+
+  struct GatewayNearbyWifiSlot {
+    var gatewayMac: String?
+  }
+
+  struct KeypadCredentialSlot {
+    var keypadMac: String?
+    var lockData: String?
+    var isMultifunctionalKeypad = false
+    var cycleList: [[String: Any]]?
+    var startDateMs: Int64 = 0
+    var endDateMs: Int64 = 0
+
+    mutating func apply(_ param: TTKeypadCredentialEventParam) {
+      keypadMac = param.keypadMac
+      lockData = param.lockData
+      isMultifunctionalKeypad = param.isMultifunctional
+      startDateMs = param.startDate
+      endDateMs = param.endDate
+      cycleList = param.cycleList?.map { $0.toMap() }
+    }
+
+    func cyclicConfigForSdk() -> [[String: Any]] {
+      cycleList ?? []
+    }
+  }
+
+  var lockScanWifi = LockScanWifiSlot()
+  var lockAddCard = LockCredentialSlot()
+  var lockAddFingerprint = LockCredentialSlot()
+  var lockAddFace = LockCredentialSlot()
+  var gatewayGetNearbyWifi = GatewayNearbyWifiSlot()
+  var accessoryAddKeypadFingerprint = KeypadCredentialSlot()
+  var accessoryAddKeypadCard = KeypadCredentialSlot()
 }
 
 extension TTCycleModel {

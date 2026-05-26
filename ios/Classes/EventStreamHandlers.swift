@@ -27,17 +27,6 @@ private func pigeonLockVersion(fromLockVersion value: Any?) -> TTLockVersion {
     protocolType: 0, protocolVersion: 0, scene: 0, groupId: 0, orgId: 0)
 }
 
-private func cyclicConfigDictArray(from cyclic: [[AnyHashable: Any]]?) -> [[String: Any]] {
-  guard let cyclic else { return [] }
-  return cyclic.map { row in
-    var out: [String: Any] = [:]
-    for (k, v) in row {
-      if let ks = k as? String { out[ks] = v }
-    }
-    return out
-  }
-}
-
 private func wifiEntries(from wifiArr: [Any]?) -> [TTWifiScanEntry] {
   guard let wifiArr else { return [] }
   var out: [TTWifiScanEntry] = []
@@ -91,10 +80,10 @@ final class LockScanLockStreamHandlerImpl: LockScanLockStreamHandler {
 
 final class LockScanWifiStreamHandlerImpl: LockScanWifiStreamHandler {
   override func onListen(withArguments arguments: Any?, sink: PigeonEventSink<TTWifiScanResult>) {
-    guard let lockData = streamContext.lockData, !lockData.isEmpty else {
+    guard let lockData = streamContext.lockScanWifi.lockData, !lockData.isEmpty else {
       sink.error(
         code: "NO_LOCK_DATA",
-        message: "请先通过 setEventLockData 设置 lockData 后再使用 lockScanWifi",
+        message: "请先通过 setLockScanWifiParam 设置 lockData 后再使用 lockScanWifi",
         details: nil)
       return
     }
@@ -114,17 +103,17 @@ final class LockScanWifiStreamHandlerImpl: LockScanWifiStreamHandler {
 
 final class LockAddCardStreamHandlerImpl: LockAddCardStreamHandler {
   override func onListen(withArguments arguments: Any?, sink: PigeonEventSink<AddCardEvent>) {
-    guard let lockData = streamContext.lockData, !lockData.isEmpty else {
+    let slot = streamContext.lockAddCard
+    guard let lockData = slot.lockData, !lockData.isEmpty else {
       sink.error(
         code: "NO_LOCK_DATA",
-        message: "请先通过 setEventLockData 设置 lockData 后再使用 lockAddCard",
+        message: "请先通过 setLockAddCardParam 设置参数后再使用 lockAddCard",
         details: nil)
       return
     }
-    let (start, end, cyclic) = streamContext.validityRangeForAddOperations()
-    let config = cyclicConfigDictArray(from: cyclic)
+    let config = slot.cyclicConfigForSdk()
     TTLock.addICCard(
-      withCyclicConfig: config, startDate: start, endDate: end, lockData: lockData,
+      withCyclicConfig: config, startDate: slot.startDateMs, endDate: slot.endDateMs, lockData: lockData,
       progress: { state in
         sink.success(AddCardEvent(isProgress: true, cardNumber: nil))
         _ = state
@@ -145,17 +134,17 @@ final class LockAddCardStreamHandlerImpl: LockAddCardStreamHandler {
 
 final class LockAddFingerprintStreamHandlerImpl: LockAddFingerprintStreamHandler {
   override func onListen(withArguments arguments: Any?, sink: PigeonEventSink<AddFingerprintEvent>) {
-    guard let lockData = streamContext.lockData, !lockData.isEmpty else {
+    let slot = streamContext.lockAddFingerprint
+    guard let lockData = slot.lockData, !lockData.isEmpty else {
       sink.error(
         code: "NO_LOCK_DATA",
-        message: "请先通过 setEventLockData 设置 lockData 后再使用 lockAddFingerprint",
+        message: "请先通过 setLockAddFingerprintParam 设置参数后再使用 lockAddFingerprint",
         details: nil)
       return
     }
-    let (start, end, cyclic) = streamContext.validityRangeForAddOperations()
-    let config = cyclicConfigDictArray(from: cyclic)
+    let config = slot.cyclicConfigForSdk()
     TTLock.addFingerprint(
-      withCyclicConfig: config, startDate: start, endDate: end, lockData: lockData,
+      withCyclicConfig: config, startDate: slot.startDateMs, endDate: slot.endDateMs, lockData: lockData,
       progress: { current, total in
         sink.success(
           AddFingerprintEvent(
@@ -187,17 +176,17 @@ final class LockAddFingerprintStreamHandlerImpl: LockAddFingerprintStreamHandler
 
 final class LockAddFaceStreamHandlerImpl: LockAddFaceStreamHandler {
   override func onListen(withArguments arguments: Any?, sink: PigeonEventSink<AddFaceEvent>) {
-    guard let lockData = streamContext.lockData, !lockData.isEmpty else {
+    let slot = streamContext.lockAddFace
+    guard let lockData = slot.lockData, !lockData.isEmpty else {
       sink.error(
         code: "NO_LOCK_DATA",
-        message: "请先通过 setEventLockData 设置 lockData 后再使用 lockAddFace",
+        message: "请先通过 setLockAddFaceParam 设置参数后再使用 lockAddFace",
         details: nil)
       return
     }
-    let (start, end, cyclic) = streamContext.validityRangeForAddOperations()
-    let config = cyclicConfigDictArray(from: cyclic)
+    let config = slot.cyclicConfigForSdk()
     TTLock.addFace(
-      withCyclicConfig: config, startDate: start, endDate: end, lockData: lockData,
+      withCyclicConfig: config, startDate: slot.startDateMs, endDate: slot.endDateMs, lockData: lockData,
       progress: { state, faceError in
         if state == .canStartAdd || state == .error {
           let pigeonState: TTFaceState? =
@@ -258,10 +247,10 @@ final class GatewayStartScanStreamHandlerImpl: GatewayStartScanStreamHandler {
 
 final class GatewayGetNearbyWifiStreamHandlerImpl: GatewayGetNearbyWifiStreamHandler {
   override func onListen(withArguments arguments: Any?, sink: PigeonEventSink<TTWifiScanResult>) {
-    guard let mac = streamContext.gatewayMac, !mac.isEmpty else {
+    guard let mac = streamContext.gatewayGetNearbyWifi.gatewayMac, !mac.isEmpty else {
       sink.error(
         code: "NO_GATEWAY",
-        message: "请先通过 setEventGatewayMac 设置已连接网关 MAC 后再使用 gatewayGetNearbyWifi",
+        message: "请先通过 setGatewayGetNearbyWifiParam 设置网关 MAC 后再使用 gatewayGetNearbyWifi",
         details: nil)
       return
     }
@@ -339,25 +328,25 @@ final class AccessoryAddKeypadFingerprintStreamHandlerImpl:
   AccessoryAddKeypadFingerprintStreamHandler
 {
   override func onListen(withArguments arguments: Any?, sink: PigeonEventSink<AddFingerprintEvent>) {
-    guard let lockData = streamContext.lockData, !lockData.isEmpty else {
+    let slot = streamContext.accessoryAddKeypadFingerprint
+    guard let lockData = slot.lockData, !lockData.isEmpty else {
       sink.error(
         code: "NO_LOCK_DATA",
-        message: "请先设置 lockData（多功能键盘需先 initMultifunctionalKeypad）",
+        message: "请先通过 setAccessoryAddKeypadFingerprintParam 设置 lockData",
         details: nil)
       return
     }
-    guard let keypadMac = streamContext.keypadMac, !keypadMac.isEmpty else {
+    guard let keypadMac = slot.keypadMac, !keypadMac.isEmpty else {
       sink.error(
         code: "NO_KEYPAD",
-        message: "请先通过 setEventKeypadMac 设置键盘 MAC",
+        message: "请先通过 setAccessoryAddKeypadFingerprintParam 设置 keypadMac",
         details: nil)
       return
     }
-    let (start, end, cyclic) = streamContext.validityRangeForAddOperations()
-    let config = cyclicConfigDictArray(from: cyclic)
-    let multi = streamContext.isMultifunctionalKeypad
+    let config = slot.cyclicConfigForSdk()
+    let multi = slot.isMultifunctionalKeypad
     TTWirelessKeypad.addFingerprint(
-      withCyclicConfig: config, startDate: start, endDate: end, keypadMac: keypadMac,
+      withCyclicConfig: config, startDate: slot.startDateMs, endDate: slot.endDateMs, keypadMac: keypadMac,
       lockData: lockData,
       progress: { current, total in
         sink.success(
@@ -397,17 +386,17 @@ final class AccessoryAddKeypadFingerprintStreamHandlerImpl:
 
 final class AccessoryAddKeypadCardStreamHandlerImpl: AccessoryAddKeypadCardStreamHandler {
   override func onListen(withArguments arguments: Any?, sink: PigeonEventSink<AddCardEvent>) {
-    guard let lockData = streamContext.lockData, !lockData.isEmpty else {
+    let slot = streamContext.accessoryAddKeypadCard
+    guard let lockData = slot.lockData, !lockData.isEmpty else {
       sink.error(
         code: "NO_LOCK_DATA",
-        message: "请先设置 lockData",
+        message: "请先通过 setAccessoryAddKeypadCardParam 设置 lockData",
         details: nil)
       return
     }
-    let (start, end, cyclic) = streamContext.validityRangeForAddOperations()
-    let config = cyclicConfigDictArray(from: cyclic)
+    let config = slot.cyclicConfigForSdk()
     TTWirelessKeypad.addCard(
-      withCyclicConfig: config, startDate: start, endDate: end, lockData: lockData,
+      withCyclicConfig: config, startDate: slot.startDateMs, endDate: slot.endDateMs, lockData: lockData,
       progress: { _ in
         sink.success(AddCardEvent(isProgress: true, cardNumber: nil))
       },

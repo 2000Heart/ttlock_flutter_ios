@@ -6,8 +6,8 @@ final class GatewayHostApiImpl: NSObject, TTGatewayHostApi {
   private let context: EventContextStore
   init(context: EventContextStore) { self.context = context }
 
-  func setEventGatewayMac(mac: String) throws {
-    context.gatewayMac = mac
+  func setGatewayGetNearbyWifiParam(gatewayMac: String) throws {
+    context.gatewayGetNearbyWifi.gatewayMac = gatewayMac
   }
 
   func initGateway(
