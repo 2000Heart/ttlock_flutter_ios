@@ -2,10 +2,10 @@ PODS:
   - Flutter (1.0.0)
   - integration_test (0.0.1):
     - Flutter
-  - TTLock (3.6.8)
   - ttlock_flutter_ios (0.0.1):
     - Flutter
-    - TTLock (= 3.6.8)
+    - TTLockOnPremise (= 2.2.2)
+  - TTLockOnPremise (2.2.2)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -14,7 +14,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - TTLock
+    - TTLockOnPremise
 
 EXTERNAL SOURCES:
   Flutter:
@@ -27,8 +27,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
-  TTLock: 38fc351b450e0f0a71fe48fc99e05bd108a87550
-  ttlock_flutter_ios: 748b5671dab23cbdc7e63f93533b825b2858320a
+  ttlock_flutter_ios: ae9e765981e906c00867a9f47e82695cc7fac320
+  TTLockOnPremise: d232e24622a05cb4b42cc218ec5fa9a886a8baa5
 
 PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
 

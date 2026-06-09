@@ -291,7 +291,7 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   func modifyAdminPasscode(
     adminPasscode: String, lockData: String, completion: @escaping (Result<String?, Error>) -> Void
   ) {
-    TTLock.modifyAdminPasscode(adminPasscode, lockData: lockData) {
+      TTLock.modifyAdminPasscode(adminPasscode, lockData: lockData) {_ in 
       completion(.success(""))
     } failure: { errorCode, errorMsg in
       completion(

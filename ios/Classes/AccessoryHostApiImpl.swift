@@ -407,14 +407,14 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
       "payMode": params.payMode == .postpaid ? "0" : "1",
       "price": "\(params.price)",
     ]
-    TTElectricMeter.add(withInfo: info) { addResult in
-      completion(.success(TTElectricMeterInitResult(
-        electricMeterId: Int64(addResult.electricMeterId),
-        featureValue: addResult.featureValue
-      )))
-    } failure: { error, errorMsg in
-      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterInit", error: error, message: errorMsg)))
-    }
+//    TTElectricMeter.add(withInfo: info) { addResult in
+//      completion(.success(TTElectricMeterInitResult(
+//        electricMeterId: Int64(addResult.electricMeterId),
+//        featureValue: addResult.featureValue
+//      )))
+//    } failure: { error, errorMsg in
+//      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterInit", error: error, message: errorMsg)))
+//    }
   }
 
   func electricMeterDelete(
@@ -537,52 +537,53 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func electricMeterIsSupportFunction(featureValue: String, lockFunction: TTElectricMeterFeature) throws -> Bool {
-    return TTElectricMeter.supportFunction(electricMeterFeatureConvert(lockFunction), featureValue: featureValue)
+      return false
+//    return TTElectricMeter.supportFunction(electricMeterFeatureConvert(lockFunction), featureValue: featureValue)
   }
 
   func electricMeterGetDeviceInfo(
     mac: String, completion: @escaping (Result<ElectricMeterDeviceInfo, Error>) -> Void
   ) {
-    TTElectricMeter.getDeviceInfo(withMac: mac) { model in
-      completion(.success(ElectricMeterDeviceInfo(
-        catOneCardNumber: model.catOneCardNumber,
-        catOneImsi: model.catOneImsi,
-        catOneNodeId: model.catOneNodeId,
-        catOneOperator: model.catOneOperator,
-        catOneRssi: Int64(model.catOneRssi) ?? 0
-      )))
-    } failure: { error, errorMsg in
-      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterGetDeviceInfo", error: error, message: errorMsg)))
-    }
+//    TTElectricMeter.getDeviceInfo(withMac: mac) { model in
+//      completion(.success(ElectricMeterDeviceInfo(
+//        catOneCardNumber: model.catOneCardNumber,
+//        catOneImsi: model.catOneImsi,
+//        catOneNodeId: model.catOneNodeId,
+//        catOneOperator: model.catOneOperator,
+//        catOneRssi: Int64(model.catOneRssi) ?? 0
+//      )))
+//    } failure: { error, errorMsg in
+//      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterGetDeviceInfo", error: error, message: errorMsg)))
+//    }
   }
 
   func electricMeterConfigApn(
     mac: String, apn: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTElectricMeter.configApn(withMac: mac, apn: apn) {
-      completion(.success(()))
-    } failure: { error, errorMsg in
-      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterConfigApn", error: error, message: errorMsg)))
-    }
+//    TTElectricMeter.configApn(withMac: mac, apn: apn) {
+//      completion(.success(()))
+//    } failure: { error, errorMsg in
+//      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterConfigApn", error: error, message: errorMsg)))
+//    }
   }
 
   func electricMeterConfigMeterServer(
     mac: String, ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTElectricMeter.configServer(withMac: mac, serverAddress: ip, portNumber: port) {
-      completion(.success(()))
-    } failure: { error, errorMsg in
-      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterConfigMeterServer", error: error, message: errorMsg)))
-    }
+//    TTElectricMeter.configServer(withMac: mac, serverAddress: ip, portNumber: port) {
+//      completion(.success(()))
+//    } failure: { error, errorMsg in
+//      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterConfigMeterServer", error: error, message: errorMsg)))
+//    }
   }
 
   func electricMeterReset(
     mac: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTElectricMeter.reset(withMac: mac) {
-      completion(.success(()))
-    } failure: { error, errorMsg in
-      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterReset", error: error, message: errorMsg)))
-    }
+//    TTElectricMeter.reset(withMac: mac) {
+//      completion(.success(()))
+//    } failure: { error, errorMsg in
+//      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterReset", error: error, message: errorMsg)))
+//    }
   }
 }
