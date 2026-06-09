@@ -57,6 +57,17 @@ func passageModeTypeConvert(_ type: TTPassageModeType) -> TTLockSDK.TTPassageMod
   }
 }
 
+func passageModeTypeRevert(_ type: TTLockSDK.TTPassageModeType) -> TTPassageModeType {
+  switch type {
+  case .weekly:
+    return .weekly
+  case .monthly:
+    return .monthly
+  @unknown default:
+      return .weekly
+  }
+}
+
 func soundVolumeConvert(_ type: TTSoundVolumeType) -> TTSoundVolume {
   switch type {
   case .firstLevel:
@@ -154,6 +165,8 @@ func lockDirectionRevert(_ direction: TTLockSDK.TTUnlockDirection) -> TTLockDire
     return .left
   case .right:
     return .right
+  @unknown default:
+    return .right
   }
 }
 
@@ -167,6 +180,21 @@ func sensitivityValueConvert(_ value: TTSensitivityValue) -> TTLockSDK.TTSensiti
     return .medium
   case .high:
     return .high
+  }
+}
+
+func sensitivityValueRevert(_ value: TTLockSDK.TTSensitivityValue) -> TTSensitivityValue {
+  switch value {
+  case .off:
+    return .off
+  case .low:
+    return .low
+  case .medium:
+    return .medium
+  case .high:
+    return .high
+  @unknown default:
+    return .off
   }
 }
 
@@ -445,44 +473,6 @@ func lockErrorConvert(_ error: TTLockSDK.TTError) -> TTLockError {
   }
 }
 
-// typedef NS_ENUM(NSInteger, TTGatewayStatus){
-//     TTGatewaySuccess = 0,
-//     TTGatewayFail = 1,
-//     TTGatewayWrongSSID = 3,
-//     TTGatewayWrongWifiPassword = 4,
-//     TTGatewayInvalidCommand = 6,
-//     TTGatewayTimeout = 7,
-//     TTGatewayNoSIM = 8,
-//     TTGatewayNoPlugCable = 9,
-//     TTGatewayWrongCRC = -1,
-//     TTGatewayWrongAeskey = -2,
-//     TTGatewayNotConnect = -3,
-//     TTGatewayDisconnect = -4,
-//     TTGatewayFailConfigRouter = -5,
-//     TTGatewayFailConfigServer = -6,
-//     TTGatewayFailConfigAccount = -7,
-//     TTGatewayFailConfigIP = -8,
-//     TTGatewayFailInvaildIP = -9,
-// };
-
-// enum TTGatewayError: Int {
-//   case success = 0
-//   case failed = 1
-//   case badWifiName = 2
-//   case badWifiPassword = 3
-//   case invalidCommand = 4
-//   case timeOut = 5
-//   case noSimCard = 6
-//   case noCable = 7
-//   case failedConfigureRouter = 8
-//   case failedConfigureServer = 9
-//   case failedConfigureAccount = 10
-//   case communicationDisconnected = 11
-//   case unConnected = 12
-//   case connectTimeout = 13
-//   case dataFormatError = 14
-// }
-
 func gatewayConnectStatusConvert(_ error: TTLockSDK.TTGatewayConnectStatus) -> TTGatewayConnectStatus {
     switch error {
     case .success:
@@ -691,5 +681,30 @@ func multifunctionalKeypadErrorConvert(_ error: TTLockSDK.TTKeypadStatus)
     return .noStorageSpace
   default:
     return .failed
+  }
+}
+
+func waterMeterFeatureConvert(_ feature: TTWaterMeterFeature) -> TTLockSDK.TTWaterMeterFeature {
+  switch feature {
+  case .catOne:
+    return .catOne
+  }
+}
+
+func electricMeterFeatureConvert(_ feature: TTElectricMeterFeature) -> TTLockSDK.TTElectricMeterFeature {
+  switch feature {
+  case .catOne:
+      return TTLockSDK.TTElectricMeterFeature.catOne
+  case .telink:
+      return TTLockSDK.TTElectricMeterFeature.telink
+  }
+}
+
+func payModeConvert(_ mode: TTMeterPayMode) -> Int {
+  switch mode {
+  case .postpaid:
+    return 0
+  case .prepaid:
+    return 1
   }
 }

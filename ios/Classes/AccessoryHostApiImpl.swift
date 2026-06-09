@@ -141,40 +141,44 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
     mac: String, info: [String: Any?],
     completion: @escaping (Result<TTStandaloneDoorSensorInfo, Error>) -> Void
   ) {
-    //    TTStandaloneDoorSensor.initWithInfo(info, mac: mac) { initModel in
-    //      completion(.success(TTStandaloneDoorSensorInfo(
-    //        doorSensorData: initModel.doorSensorData,
-    //        electricQuantity: Int64(initModel.electricQuantity),
-    //        featureValue: initModel.featureValue,
-    //        wifiMac: initModel.wifiMac,
-    //        modelNum: initModel.modelNum,
-    //        hardwareRevision: initModel.hardwareRevision,
-    //        firmwareRevision: initModel.firmwareRevision
-    //      )))
-    //    } failure: { error, errorMsg in
-    //      completion(.failure(makeLockApiError(operation: "accessory.standaloneDoorSensorInit", error: error, message: errorMsg.isEmpty ? nil : errorMsg)))
-    //    }
-    completion(
-      .failure(TtlockPremiseNewArchError.notImplemented("accessory.standaloneDoorSensorInit")))
+    TTStandaloneDoorSensor.initWithInfo(info, mac: mac) { initModel in
+      completion(.success(TTStandaloneDoorSensorInfo(
+        doorSensorData: initModel.doorSensorData,
+        electricQuantity: Int64(initModel.electricQuantity),
+        featureValue: initModel.featureValue,
+        wifiMac: initModel.wifiMac,
+        modelNum: initModel.modelNum,
+        hardwareRevision: initModel.hardwareRevision,
+        firmwareRevision: initModel.firmwareRevision
+      )))
+    } failure: { error, errorMsg in
+      completion(.failure(PigeonError(
+        code: "STANDALONE_DOOR_SENSOR_ERROR",
+        message: errorMsg,
+        details: "\(error.rawValue)"
+      )))
+    }
   }
 
   func standaloneDoorSensorReadFeatureValue(
     mac: String, completion: @escaping (Result<String, Error>) -> Void
   ) {
-    //    TTStandaloneDoorSensor.getFeatureValue(withMac: mac) { featureValue in
-    //      completion(.success(featureValue))
-    //    } failure: { error, errorMsg in
-    //      completion(.failure(makeLockApiError(operation: "accessory.standaloneDoorSensorReadFeatureValue", error: error, message: errorMsg.isEmpty ? nil : errorMsg)))
-    //    }
-    completion(
-      .failure(
-        TtlockPremiseNewArchError.notImplemented("accessory.standaloneDoorSensorReadFeatureValue")))
+    TTStandaloneDoorSensor.getFeatureValue(withMac: mac) { featureValue in
+      completion(.success(featureValue))
+    } failure: { error, errorMsg in
+      completion(.failure(PigeonError(
+        code: "STANDALONE_DOOR_SENSOR_ERROR",
+        message: errorMsg,
+        details: "\(error.rawValue)"
+      )))
+    }
   }
 
   func standaloneDoorSensorIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool {
-    //    return TTStandaloneDoorSensor.supportFunction(Int(lockFunction), featureValue: featureValue)
-    throw TtlockPremiseNewArchError.notImplemented(
-      "accessory.standaloneDoorSensorIsSupportFunction")
+    guard let feature = TTStandaloneDoorSensorFeature(rawValue: Int(truncatingIfNeeded: lockFunction)) else {
+      return false
+    }
+    return TTStandaloneDoorSensor.supportFunction(feature, featureValue: featureValue)
   }
 
   func waterMeterConfigServer(url: String, clientId: String, accessToken: String) throws {
@@ -197,21 +201,26 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func waterMeterInit(
-    params: [String: Any?], completion: @escaping (Result<TTWaterMeterInitResult, Error>) -> Void
+    params: TTWaterMeterInitParam, completion: @escaping (Result<TTWaterMeterInitResult, Error>) -> Void
   ) {
-    //    TTWaterMeter.add(withInfo: params) { result in
-    //      completion(.success(TTWaterMeterInitResult(
-    //        waterMeterId: "\(result.waterMeterId)",
-    //        featureValue: result.featureValue
-    //      )))
-    //    } failure: { error, errorMsg in
-    //      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterInit", error: error, message: errorMsg)))
-    //    }
-    completion(.failure(TtlockPremiseNewArchError.notImplemented("accessory.waterMeterInit")))
+    let info: [String: String] = [
+      "mac": params.mac,
+      "number": params.name,
+      "payMode": params.payMode == .postpaid ? "0" : "1",
+      "price": "\(params.price)",
+    ]
+    TTWaterMeter.add(withInfo: info) { result in
+      completion(.success(TTWaterMeterInitResult(
+        waterMeterId: Int64(result.waterMeterId),
+        featureValue: result.featureValue
+      )))
+    } failure: { error, errorMsg in
+      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterInit", error: error, message: errorMsg)))
+    }
   }
 
-  func waterMeterDelete(waterMeterId: String, completion: @escaping (Result<Void, Error>) -> Void) {
-    TTWaterMeter.delete(withMac: waterMeterId) {
+  func waterMeterDelete(mac: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    TTWaterMeter.delete(withMac: mac) {
       completion(.success(()))
     } failure: { error, errorMsg in
       completion(
@@ -222,9 +231,9 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func waterMeterSetPowerOnOff(
-    waterMeterId: String, isOn: Bool, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, isOn: Bool, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTWaterMeter.setWaterOnOffWithMac(waterMeterId, onOff: isOn ? 1 : 0) {
+    TTWaterMeter.setWaterOnOffWithMac(mac, onOff: isOn ? 1 : 0) {
       completion(.success(()))
     } failure: { error, errorMsg in
       completion(
@@ -235,9 +244,9 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func waterMeterSetRemainderM3(
-    waterMeterId: String, remainderM3: Double, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, remainderM3: Double, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTWaterMeter.setRemainingWaterWithMac(waterMeterId, remainderM3: "\(remainderM3)") {
+    TTWaterMeter.setRemainingWaterWithMac(mac, remainderM3: "\(remainderM3)") {
       completion(.success(()))
     } failure: { error, errorMsg in
       completion(
@@ -248,9 +257,9 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func waterMeterClearRemainderM3(
-    waterMeterId: String, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTWaterMeter.clearRemainingWater(withMac: waterMeterId) {
+    TTWaterMeter.clearRemainingWater(withMac: mac) {
       completion(.success(()))
     } failure: { error, errorMsg in
       completion(
@@ -261,10 +270,10 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func waterMeterReadData(
-    waterMeterId: String, completion: @escaping (Result<[String: Any?], Error>) -> Void
+    mac: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTWaterMeter.readData(withMac: waterMeterId) {
-      completion(.success([:]))
+    TTWaterMeter.readData(withMac: mac) {
+      completion(.success(()))
     } failure: { error, errorMsg in
       completion(
         .failure(
@@ -274,9 +283,9 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func waterMeterSetPayMode(
-    waterMeterId: String, payMode: Int64, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, payMode: TTMeterPayMode, price: Double, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTWaterMeter.setPayModeWithMac(waterMeterId, payMode: Int(payMode), price: "0") {
+    TTWaterMeter.setPayModeWithMac(mac, payMode: payModeConvert(payMode), price: "\(price)") {
       completion(.success(()))
     } failure: { error, errorMsg in
       completion(
@@ -287,10 +296,10 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func waterMeterCharge(
-    waterMeterId: String, amount: Double, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, amount: Double, m3: Double, completion: @escaping (Result<Void, Error>) -> Void
   ) {
     TTWaterMeter.recharge(
-      withMac: waterMeterId, rechargeAmount: "\(amount)", rechargeM3: "\(amount)"
+      withMac: mac, rechargeAmount: "\(amount)", rechargeM3: "\(m3)"
     ) {
       completion(.success(()))
     } failure: { error, errorMsg in
@@ -302,9 +311,9 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func waterMeterSetTotalUsage(
-    waterMeterId: String, totalM3: Double, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, totalM3: Double, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTWaterMeter.setTotalUsageWithMac(waterMeterId, totalM3: "\(totalM3)") {
+    TTWaterMeter.setTotalUsageWithMac(mac, totalM3: "\(totalM3)") {
       completion(.success(()))
     } failure: { error, errorMsg in
       completion(
@@ -315,79 +324,59 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func waterMeterGetFeatureValue(
-    waterMeterId: String, completion: @escaping (Result<String, Error>) -> Void
+    mac: String, completion: @escaping (Result<String, Error>) -> Void
   ) {
-    //    TTWaterMeter.getFeatureValue(withMac: waterMeterId) { featureValue in
-    //      completion(.success(featureValue))
-    //    } failure: { error, errorMsg in
-    //      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterGetFeatureValue", error: error, message: errorMsg)))
-    //    }
-    completion(
-      .failure(TtlockPremiseNewArchError.notImplemented("accessory.waterMeterGetFeatureValue")))
+    TTWaterMeter.getFeatureValue(withMac: mac) {
+      completion(.success(""))
+    } failure: { error, errorMsg in
+      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterGetFeatureValue", error: error, message: errorMsg)))
+    }
   }
 
   func waterMeterGetDeviceInfo(
-    waterMeterId: String, completion: @escaping (Result<WaterMeterDeviceInfo, Error>) -> Void
+    mac: String, completion: @escaping (Result<WaterMeterDeviceInfo, Error>) -> Void
   ) {
-    //    TTWaterMeter.getDeviceInfo(withMac: waterMeterId) { model in
-    //      completion(.success(WaterMeterDeviceInfo(
-    //        modelNum: model.modelNum,
-    //        hardwareRevision: model.hardwareRevision,
-    //        firmwareRevision: model.firmwareRevision,
-    //        catOneOperator: model.catOneOperator,
-    //        catOneNodeId: model.catOneNodeId,
-    //        catOneCardNumber: model.catOneCardNumber,
-    //        catOneRssi: model.catOneRssi,
-    //        catOneImsi: model.catOneImsi
-    //      )))
-    //    } failure: { error, errorMsg in
-    //      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterGetDeviceInfo", error: error, message: errorMsg)))
-    //    }
-    completion(
-      .failure(TtlockPremiseNewArchError.notImplemented("accessory.waterMeterGetDeviceInfo")))
+    TTWaterMeter.getDeviceInfo(withMac: mac) { model in
+      completion(.success(WaterMeterDeviceInfo(
+        catOneCardNumber: model.catOneCardNumber,
+        catOneImsi: model.catOneImsi,
+        catOneNodeId: model.catOneNodeId,
+        catOneOperator: model.catOneOperator,
+        catOneRssi: Int64(model.catOneRssi) ?? 0
+      )))
+    } failure: { error, errorMsg in
+      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterGetDeviceInfo", error: error, message: errorMsg)))
+    }
   }
 
-  func waterMeterIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool {
-    //    return TTWaterMeter.supportFunction(Int(lockFunction), featureValue: featureValue)
-    throw TtlockPremiseNewArchError.notImplemented("accessory.waterMeterIsSupportFunction")
+  func waterMeterIsSupportFunction(featureValue: String, lockFunction: TTWaterMeterFeature) throws -> Bool {
+    return TTWaterMeter.supportFunction(waterMeterFeatureConvert(lockFunction), featureValue: featureValue)
   }
 
-  func waterMeterConfigApn(apn: String, completion: @escaping (Result<Void, Error>) -> Void) {
-    //    guard let mac = context.keypadMac else {
-    //      completion(.failure(TtlockPremiseNewArchError.notImplemented("TODO(chuyi): pending API contract - missing meter mac")))
-    //      return
-    //    }
-    //    TTWaterMeter.configApn(withMac: mac, apn: apn) {
-    //      completion(.success(()))
-    //    } failure: { error, errorMsg in
-    //      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterConfigApn", error: error, message: errorMsg)))
-    //    }
-    completion(.failure(TtlockPremiseNewArchError.notImplemented("accessory.waterMeterConfigApn")))
+  func waterMeterConfigApn(mac: String, apn: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    TTWaterMeter.configApn(withMac: mac, apn: apn) {
+      completion(.success(()))
+    } failure: { error, errorMsg in
+      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterConfigApn", error: error, message: errorMsg)))
+    }
   }
 
   func waterMeterConfigMeterServer(
-    ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    //    guard let mac = context.keypadMac else {
-    //      completion(.failure(TtlockPremiseNewArchError.notImplemented("TODO(chuyi): pending API contract - missing meter mac")))
-    //      return
-    //    }
-    //    TTWaterMeter.configServer(withMac: mac, serverAddress: ip, portNumber: port) {
-    //      completion(.success(()))
-    //    } failure: { error, errorMsg in
-    //      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterConfigMeterServer", error: error, message: errorMsg)))
-    //    }
-    completion(
-      .failure(TtlockPremiseNewArchError.notImplemented("accessory.waterMeterConfigMeterServer")))
+    TTWaterMeter.configServer(withMac: mac, serverAddress: ip, portNumber: port) {
+      completion(.success(()))
+    } failure: { error, errorMsg in
+      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterConfigMeterServer", error: error, message: errorMsg)))
+    }
   }
 
-  func waterMeterReset(waterMeterId: String, completion: @escaping (Result<Void, Error>) -> Void) {
-    //    TTWaterMeter.reset(withMac: waterMeterId) {
-    //      completion(.success(()))
-    //    } failure: { error, errorMsg in
-    //      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterReset", error: error, message: errorMsg)))
-    //    }
-    completion(.failure(TtlockPremiseNewArchError.notImplemented("accessory.waterMeterReset")))
+  func waterMeterReset(mac: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    TTWaterMeter.reset(withMac: mac) {
+      completion(.success(()))
+    } failure: { error, errorMsg in
+      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterReset", error: error, message: errorMsg)))
+    }
   }
 
   func electricMeterConfigServer(url: String, clientId: String, accessToken: String) throws {
@@ -410,23 +399,28 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func electricMeterInit(
-    params: [String: Any?], completion: @escaping (Result<TTElectricMeterInitResult, Error>) -> Void
+    params: TTElectricMeterInitParam, completion: @escaping (Result<TTElectricMeterInitResult, Error>) -> Void
   ) {
-    //    TTElectricMeter.add(withInfo: params) { result in
-    //      completion(.success(TTElectricMeterInitResult(
-    //        electricMeterId: "\(result.electricMeterId)",
-    //        featureValue: nil
-    //      )))
-    //    } failure: { error, errorMsg in
-    //      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterInit", error: error, message: errorMsg)))
-    //    }
-    completion(.failure(TtlockPremiseNewArchError.notImplemented("accessory.electricMeterInit")))
+    let info: [String: String] = [
+      "mac": params.mac,
+      "number": params.name,
+      "payMode": params.payMode == .postpaid ? "0" : "1",
+      "price": "\(params.price)",
+    ]
+    TTElectricMeter.add(withInfo: info) { addResult in
+      completion(.success(TTElectricMeterInitResult(
+        electricMeterId: Int64(addResult.electricMeterId),
+        featureValue: addResult.featureValue
+      )))
+    } failure: { error, errorMsg in
+      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterInit", error: error, message: errorMsg)))
+    }
   }
 
   func electricMeterDelete(
-    electricMeterId: String, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTElectricMeter.delete(withMac: electricMeterId) {
+    TTElectricMeter.delete(withMac: mac) {
       completion(.success(()))
     } failure: { error, errorMsg in
       completion(
@@ -437,9 +431,9 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func electricMeterSetPowerOnOff(
-    electricMeterId: String, isOn: Bool, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, isOn: Bool, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTElectricMeter.setPowerOnOffWithMac(electricMeterId, powerOn: isOn) {
+    TTElectricMeter.setPowerOnOffWithMac(mac, powerOn: isOn) {
       completion(.success(()))
     } failure: { error, errorMsg in
       completion(
@@ -450,10 +444,10 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func electricMeterSetRemainderKwh(
-    electricMeterId: String, remainderKwh: Double,
+    mac: String, remainderKwh: Double,
     completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTElectricMeter.setRemainingElectricityWithMac(electricMeterId, remainderKwh: "\(remainderKwh)")
+    TTElectricMeter.setRemainingElectricityWithMac(mac, remainderKwh: "\(remainderKwh)")
     {
       completion(.success(()))
     } failure: { error, errorMsg in
@@ -465,9 +459,9 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func electricMeterClearRemainderKwh(
-    electricMeterId: String, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTElectricMeter.clearRemainingElectricity(withMac: electricMeterId) {
+    TTElectricMeter.clearRemainingElectricity(withMac: mac) {
       completion(.success(()))
     } failure: { error, errorMsg in
       completion(
@@ -479,10 +473,10 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func electricMeterReadData(
-    electricMeterId: String, completion: @escaping (Result<[String: Any?], Error>) -> Void
+    mac: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTElectricMeter.readData(withMac: electricMeterId) {
-      completion(.success([:]))
+    TTElectricMeter.readData(withMac: mac) {
+        completion(.success(()))
     } failure: { error, errorMsg in
       completion(
         .failure(
@@ -492,9 +486,9 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func electricMeterSetPayMode(
-    electricMeterId: String, payMode: Int64, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, payMode: TTMeterPayMode, price: Double, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTElectricMeter.setPayModeWithMac(electricMeterId, payMode: Int(payMode), price: "0") {
+    TTElectricMeter.setPayModeWithMac(mac, payMode: payModeConvert(payMode), price: "\(price)") {
       completion(.success(()))
     } failure: { error, errorMsg in
       completion(
@@ -505,10 +499,10 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func electricMeterCharge(
-    electricMeterId: String, amount: Double, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, amount: Double, kwh: Double, completion: @escaping (Result<Void, Error>) -> Void
   ) {
     TTElectricMeter.recharge(
-      withMac: electricMeterId, rechargeAmount: "\(amount)", rechargeKwh: "\(amount)"
+      withMac: mac, rechargeAmount: "\(amount)", rechargeKwh: "\(kwh)"
     ) {
       completion(.success(()))
     } failure: { error, errorMsg in
@@ -520,9 +514,9 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func electricMeterSetMaxPower(
-    electricMeterId: String, maxPower: Double, completion: @escaping (Result<Void, Error>) -> Void
+    mac: String, maxPower: Double, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTElectricMeter.setMaxPowerWithMac(electricMeterId, maxPower: Int(maxPower)) {
+    TTElectricMeter.setMaxPowerWithMac(mac, maxPower: Int(maxPower)) {
       completion(.success(()))
     } failure: { error, errorMsg in
       completion(
@@ -533,20 +527,62 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func electricMeterGetFeatureValue(
-    electricMeterId: String, completion: @escaping (Result<String, Error>) -> Void
+    mac: String, completion: @escaping (Result<String, Error>) -> Void
   ) {
-    //    TTElectricMeter.getFeatureValue(withMac: electricMeterId) { featureValue in
-    //      completion(.success(featureValue))
-    //    } failure: { error, errorMsg in
-    //      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterGetFeatureValue", error: error, message: errorMsg)))
-    //    }
-    completion(
-      .failure(TtlockPremiseNewArchError.notImplemented("accessory.electricMeterGetFeatureValue")))
+    TTElectricMeter.getFeatureValue(withMac: mac) {
+      completion(.success(""))
+    } failure: { error, errorMsg in
+      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterGetFeatureValue", error: error, message: errorMsg)))
+    }
   }
 
-  func electricMeterIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool {
-    //    return TTElectricMeter.supportFunction(Int(lockFunction), featureValue: featureValue)
-    throw TtlockPremiseNewArchError.notImplemented("accessory.electricMeterIsSupportFunction")
+  func electricMeterIsSupportFunction(featureValue: String, lockFunction: TTElectricMeterFeature) throws -> Bool {
+    return TTElectricMeter.supportFunction(electricMeterFeatureConvert(lockFunction), featureValue: featureValue)
   }
 
+  func electricMeterGetDeviceInfo(
+    mac: String, completion: @escaping (Result<ElectricMeterDeviceInfo, Error>) -> Void
+  ) {
+    TTElectricMeter.getDeviceInfo(withMac: mac) { model in
+      completion(.success(ElectricMeterDeviceInfo(
+        catOneCardNumber: model.catOneCardNumber,
+        catOneImsi: model.catOneImsi,
+        catOneNodeId: model.catOneNodeId,
+        catOneOperator: model.catOneOperator,
+        catOneRssi: Int64(model.catOneRssi) ?? 0
+      )))
+    } failure: { error, errorMsg in
+      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterGetDeviceInfo", error: error, message: errorMsg)))
+    }
+  }
+
+  func electricMeterConfigApn(
+    mac: String, apn: String, completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    TTElectricMeter.configApn(withMac: mac, apn: apn) {
+      completion(.success(()))
+    } failure: { error, errorMsg in
+      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterConfigApn", error: error, message: errorMsg)))
+    }
+  }
+
+  func electricMeterConfigMeterServer(
+    mac: String, ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    TTElectricMeter.configServer(withMac: mac, serverAddress: ip, portNumber: port) {
+      completion(.success(()))
+    } failure: { error, errorMsg in
+      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterConfigMeterServer", error: error, message: errorMsg)))
+    }
+  }
+
+  func electricMeterReset(
+    mac: String, completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    TTElectricMeter.reset(withMac: mac) {
+      completion(.success(()))
+    } failure: { error, errorMsg in
+      completion(.failure(makeElectricMeterApiError(operation: "accessory.electricMeterReset", error: error, message: errorMsg)))
+    }
+  }
 }

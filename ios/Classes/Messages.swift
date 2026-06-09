@@ -447,6 +447,20 @@ enum TTFaceState: Int {
   case error = 1
 }
 
+enum TTWaterMeterFeature: Int {
+  case catOne = 0
+}
+
+enum TTElectricMeterFeature: Int {
+  case catOne = 0
+  case telink = 1
+}
+
+enum TTMeterPayMode: Int {
+  case postpaid = 0
+  case prepaid = 1
+}
+
 enum TTFaceErrorCode: Int {
   case normal = 0
   case noFaceDetected = 1
@@ -1028,6 +1042,47 @@ struct AccessoryElectricQuantityResult: Hashable {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
+struct TTPassageModeModel: Hashable {
+  var type: TTPassageModeType
+  var weekly: [Int64]? = nil
+  var monthly: [Int64]? = nil
+  var startDate: Int64
+  var endDate: Int64
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> TTPassageModeModel? {
+    let type = pigeonVar_list[0] as! TTPassageModeType
+    let weekly: [Int64]? = nilOrValue(pigeonVar_list[1])
+    let monthly: [Int64]? = nilOrValue(pigeonVar_list[2])
+    let startDate = pigeonVar_list[3] as! Int64
+    let endDate = pigeonVar_list[4] as! Int64
+
+    return TTPassageModeModel(
+      type: type,
+      weekly: weekly,
+      monthly: monthly,
+      startDate: startDate,
+      endDate: endDate
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      type,
+      weekly,
+      monthly,
+      startDate,
+      endDate,
+    ]
+  }
+  static func == (lhs: TTPassageModeModel, rhs: TTPassageModeModel) -> Bool {
+    return deepEqualsMessages(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashMessages(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
 struct TTLockScanModel: Hashable {
   var lockName: String
   var lockMac: String
@@ -1443,14 +1498,14 @@ struct TTMeterScanModel: Hashable {
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct TTWaterMeterInitResult: Hashable {
-  var waterMeterId: String
-  var featureValue: String? = nil
+  var waterMeterId: Int64
+  var featureValue: String
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> TTWaterMeterInitResult? {
-    let waterMeterId = pigeonVar_list[0] as! String
-    let featureValue: String? = nilOrValue(pigeonVar_list[1])
+    let waterMeterId = pigeonVar_list[0] as! Int64
+    let featureValue = pigeonVar_list[1] as! String
 
     return TTWaterMeterInitResult(
       waterMeterId: waterMeterId,
@@ -1472,14 +1527,14 @@ struct TTWaterMeterInitResult: Hashable {
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct TTElectricMeterInitResult: Hashable {
-  var electricMeterId: String
-  var featureValue: String? = nil
+  var electricMeterId: Int64
+  var featureValue: String
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> TTElectricMeterInitResult? {
-    let electricMeterId = pigeonVar_list[0] as! String
-    let featureValue: String? = nilOrValue(pigeonVar_list[1])
+    let electricMeterId = pigeonVar_list[0] as! Int64
+    let featureValue = pigeonVar_list[1] as! String
 
     return TTElectricMeterInitResult(
       electricMeterId: electricMeterId,
@@ -1682,6 +1737,121 @@ struct WaterMeterDeviceInfo: Hashable {
     ]
   }
   static func == (lhs: WaterMeterDeviceInfo, rhs: WaterMeterDeviceInfo) -> Bool {
+    return deepEqualsMessages(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashMessages(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct ElectricMeterDeviceInfo: Hashable {
+  var catOneCardNumber: String
+  var catOneImsi: String
+  var catOneNodeId: String
+  var catOneOperator: String
+  var catOneRssi: Int64
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> ElectricMeterDeviceInfo? {
+    let catOneCardNumber = pigeonVar_list[0] as! String
+    let catOneImsi = pigeonVar_list[1] as! String
+    let catOneNodeId = pigeonVar_list[2] as! String
+    let catOneOperator = pigeonVar_list[3] as! String
+    let catOneRssi = pigeonVar_list[4] as! Int64
+
+    return ElectricMeterDeviceInfo(
+      catOneCardNumber: catOneCardNumber,
+      catOneImsi: catOneImsi,
+      catOneNodeId: catOneNodeId,
+      catOneOperator: catOneOperator,
+      catOneRssi: catOneRssi
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      catOneCardNumber,
+      catOneImsi,
+      catOneNodeId,
+      catOneOperator,
+      catOneRssi,
+    ]
+  }
+  static func == (lhs: ElectricMeterDeviceInfo, rhs: ElectricMeterDeviceInfo) -> Bool {
+    return deepEqualsMessages(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashMessages(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct TTWaterMeterInitParam: Hashable {
+  var mac: String
+  var name: String
+  var payMode: TTMeterPayMode
+  var price: Double
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> TTWaterMeterInitParam? {
+    let mac = pigeonVar_list[0] as! String
+    let name = pigeonVar_list[1] as! String
+    let payMode = pigeonVar_list[2] as! TTMeterPayMode
+    let price = pigeonVar_list[3] as! Double
+
+    return TTWaterMeterInitParam(
+      mac: mac,
+      name: name,
+      payMode: payMode,
+      price: price
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      mac,
+      name,
+      payMode,
+      price,
+    ]
+  }
+  static func == (lhs: TTWaterMeterInitParam, rhs: TTWaterMeterInitParam) -> Bool {
+    return deepEqualsMessages(lhs.toList(), rhs.toList())  }
+  func hash(into hasher: inout Hasher) {
+    deepHashMessages(value: toList(), hasher: &hasher)
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct TTElectricMeterInitParam: Hashable {
+  var mac: String
+  var name: String
+  var payMode: TTMeterPayMode
+  var price: Double
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> TTElectricMeterInitParam? {
+    let mac = pigeonVar_list[0] as! String
+    let name = pigeonVar_list[1] as! String
+    let payMode = pigeonVar_list[2] as! TTMeterPayMode
+    let price = pigeonVar_list[3] as! Double
+
+    return TTElectricMeterInitParam(
+      mac: mac,
+      name: name,
+      payMode: payMode,
+      price: price
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      mac,
+      name,
+      payMode,
+      price,
+    ]
+  }
+  static func == (lhs: TTElectricMeterInitParam, rhs: TTElectricMeterInitParam) -> Bool {
     return deepEqualsMessages(lhs.toList(), rhs.toList())  }
   func hash(into hasher: inout Hasher) {
     deepHashMessages(value: toList(), hasher: &hasher)
@@ -1947,76 +2117,102 @@ private class MessagesPigeonCodecReader: FlutterStandardReader {
     case 154:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return TTFaceErrorCode(rawValue: enumResultAsInt)
+        return TTWaterMeterFeature(rawValue: enumResultAsInt)
       }
       return nil
     case 155:
-      return TTLockVersion.fromList(self.readValue() as! [Any?])
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return TTElectricMeterFeature(rawValue: enumResultAsInt)
+      }
+      return nil
     case 156:
-      return TTLockInitParams.fromList(self.readValue() as! [Any?])
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return TTMeterPayMode(rawValue: enumResultAsInt)
+      }
+      return nil
     case 157:
-      return TTGatewayInitParams.fromList(self.readValue() as! [Any?])
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return TTFaceErrorCode(rawValue: enumResultAsInt)
+      }
+      return nil
     case 158:
-      return TTIpSetting.fromList(self.readValue() as! [Any?])
+      return TTLockVersion.fromList(self.readValue() as! [Any?])
     case 159:
-      return TTCycleModel.fromList(self.readValue() as! [Any?])
+      return TTLockInitParams.fromList(self.readValue() as! [Any?])
     case 160:
-      return TTLockScanWifiEventParam.fromList(self.readValue() as! [Any?])
+      return TTGatewayInitParams.fromList(self.readValue() as! [Any?])
     case 161:
-      return TTLockCredentialEventParam.fromList(self.readValue() as! [Any?])
+      return TTIpSetting.fromList(self.readValue() as! [Any?])
     case 162:
-      return TTKeypadCredentialEventParam.fromList(self.readValue() as! [Any?])
+      return TTCycleModel.fromList(self.readValue() as! [Any?])
     case 163:
-      return ControlLockResult.fromList(self.readValue() as! [Any?])
+      return TTLockScanWifiEventParam.fromList(self.readValue() as! [Any?])
     case 164:
-      return AutoLockingTime.fromList(self.readValue() as! [Any?])
+      return TTLockCredentialEventParam.fromList(self.readValue() as! [Any?])
     case 165:
-      return TTWifiInfoModel.fromList(self.readValue() as! [Any?])
+      return TTKeypadCredentialEventParam.fromList(self.readValue() as! [Any?])
     case 166:
-      return CameraLockWifiResult.fromList(self.readValue() as! [Any?])
+      return ControlLockResult.fromList(self.readValue() as! [Any?])
     case 167:
-      return TTLockSystemModel.fromList(self.readValue() as! [Any?])
+      return AutoLockingTime.fromList(self.readValue() as! [Any?])
     case 168:
-      return AccessoryElectricQuantityResult.fromList(self.readValue() as! [Any?])
+      return TTWifiInfoModel.fromList(self.readValue() as! [Any?])
     case 169:
-      return TTLockScanModel.fromList(self.readValue() as! [Any?])
+      return CameraLockWifiResult.fromList(self.readValue() as! [Any?])
     case 170:
-      return TTPasscodeModel.fromList(self.readValue() as! [Any?])
+      return TTLockSystemModel.fromList(self.readValue() as! [Any?])
     case 171:
-      return TTICCardModel.fromList(self.readValue() as! [Any?])
+      return AccessoryElectricQuantityResult.fromList(self.readValue() as! [Any?])
     case 172:
-      return TTFingerprintModel.fromList(self.readValue() as! [Any?])
+      return TTPassageModeModel.fromList(self.readValue() as! [Any?])
     case 173:
-      return TTGatewayScanModel.fromList(self.readValue() as! [Any?])
+      return TTLockScanModel.fromList(self.readValue() as! [Any?])
     case 174:
-      return GatewayDeviceInfo.fromList(self.readValue() as! [Any?])
+      return TTPasscodeModel.fromList(self.readValue() as! [Any?])
     case 175:
-      return TTRemoteAccessoryScanModel.fromList(self.readValue() as! [Any?])
+      return TTICCardModel.fromList(self.readValue() as! [Any?])
     case 176:
-      return TTStandaloneDoorSensorScanModel.fromList(self.readValue() as! [Any?])
+      return TTFingerprintModel.fromList(self.readValue() as! [Any?])
     case 177:
-      return TTStandaloneDoorSensorInfo.fromList(self.readValue() as! [Any?])
+      return TTGatewayScanModel.fromList(self.readValue() as! [Any?])
     case 178:
-      return TTMeterScanModel.fromList(self.readValue() as! [Any?])
+      return GatewayDeviceInfo.fromList(self.readValue() as! [Any?])
     case 179:
-      return TTWaterMeterInitResult.fromList(self.readValue() as! [Any?])
+      return TTRemoteAccessoryScanModel.fromList(self.readValue() as! [Any?])
     case 180:
-      return TTElectricMeterInitResult.fromList(self.readValue() as! [Any?])
+      return TTStandaloneDoorSensorScanModel.fromList(self.readValue() as! [Any?])
     case 181:
-      return TTWifiScanResult.fromList(self.readValue() as! [Any?])
+      return TTStandaloneDoorSensorInfo.fromList(self.readValue() as! [Any?])
     case 182:
-      return TTWifiScanEntry.fromList(self.readValue() as! [Any?])
+      return TTMeterScanModel.fromList(self.readValue() as! [Any?])
     case 183:
-      return RemoteKeypadInitResult.fromList(self.readValue() as! [Any?])
+      return TTWaterMeterInitResult.fromList(self.readValue() as! [Any?])
     case 184:
-      return MultifunctionalKeypadInitResult.fromList(self.readValue() as! [Any?])
+      return TTElectricMeterInitResult.fromList(self.readValue() as! [Any?])
     case 185:
-      return WaterMeterDeviceInfo.fromList(self.readValue() as! [Any?])
+      return TTWifiScanResult.fromList(self.readValue() as! [Any?])
     case 186:
-      return AddCardEvent.fromList(self.readValue() as! [Any?])
+      return TTWifiScanEntry.fromList(self.readValue() as! [Any?])
     case 187:
-      return AddFingerprintEvent.fromList(self.readValue() as! [Any?])
+      return RemoteKeypadInitResult.fromList(self.readValue() as! [Any?])
     case 188:
+      return MultifunctionalKeypadInitResult.fromList(self.readValue() as! [Any?])
+    case 189:
+      return WaterMeterDeviceInfo.fromList(self.readValue() as! [Any?])
+    case 190:
+      return ElectricMeterDeviceInfo.fromList(self.readValue() as! [Any?])
+    case 191:
+      return TTWaterMeterInitParam.fromList(self.readValue() as! [Any?])
+    case 192:
+      return TTElectricMeterInitParam.fromList(self.readValue() as! [Any?])
+    case 193:
+      return AddCardEvent.fromList(self.readValue() as! [Any?])
+    case 194:
+      return AddFingerprintEvent.fromList(self.readValue() as! [Any?])
+    case 195:
       return AddFaceEvent.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -2101,110 +2297,131 @@ private class MessagesPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? TTFaceState {
       super.writeByte(153)
       super.writeValue(value.rawValue)
-    } else if let value = value as? TTFaceErrorCode {
+    } else if let value = value as? TTWaterMeterFeature {
       super.writeByte(154)
       super.writeValue(value.rawValue)
-    } else if let value = value as? TTLockVersion {
+    } else if let value = value as? TTElectricMeterFeature {
       super.writeByte(155)
-      super.writeValue(value.toList())
-    } else if let value = value as? TTLockInitParams {
+      super.writeValue(value.rawValue)
+    } else if let value = value as? TTMeterPayMode {
       super.writeByte(156)
-      super.writeValue(value.toList())
-    } else if let value = value as? TTGatewayInitParams {
+      super.writeValue(value.rawValue)
+    } else if let value = value as? TTFaceErrorCode {
       super.writeByte(157)
-      super.writeValue(value.toList())
-    } else if let value = value as? TTIpSetting {
+      super.writeValue(value.rawValue)
+    } else if let value = value as? TTLockVersion {
       super.writeByte(158)
       super.writeValue(value.toList())
-    } else if let value = value as? TTCycleModel {
+    } else if let value = value as? TTLockInitParams {
       super.writeByte(159)
       super.writeValue(value.toList())
-    } else if let value = value as? TTLockScanWifiEventParam {
+    } else if let value = value as? TTGatewayInitParams {
       super.writeByte(160)
       super.writeValue(value.toList())
-    } else if let value = value as? TTLockCredentialEventParam {
+    } else if let value = value as? TTIpSetting {
       super.writeByte(161)
       super.writeValue(value.toList())
-    } else if let value = value as? TTKeypadCredentialEventParam {
+    } else if let value = value as? TTCycleModel {
       super.writeByte(162)
       super.writeValue(value.toList())
-    } else if let value = value as? ControlLockResult {
+    } else if let value = value as? TTLockScanWifiEventParam {
       super.writeByte(163)
       super.writeValue(value.toList())
-    } else if let value = value as? AutoLockingTime {
+    } else if let value = value as? TTLockCredentialEventParam {
       super.writeByte(164)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWifiInfoModel {
+    } else if let value = value as? TTKeypadCredentialEventParam {
       super.writeByte(165)
       super.writeValue(value.toList())
-    } else if let value = value as? CameraLockWifiResult {
+    } else if let value = value as? ControlLockResult {
       super.writeByte(166)
       super.writeValue(value.toList())
-    } else if let value = value as? TTLockSystemModel {
+    } else if let value = value as? AutoLockingTime {
       super.writeByte(167)
       super.writeValue(value.toList())
-    } else if let value = value as? AccessoryElectricQuantityResult {
+    } else if let value = value as? TTWifiInfoModel {
       super.writeByte(168)
       super.writeValue(value.toList())
-    } else if let value = value as? TTLockScanModel {
+    } else if let value = value as? CameraLockWifiResult {
       super.writeByte(169)
       super.writeValue(value.toList())
-    } else if let value = value as? TTPasscodeModel {
+    } else if let value = value as? TTLockSystemModel {
       super.writeByte(170)
       super.writeValue(value.toList())
-    } else if let value = value as? TTICCardModel {
+    } else if let value = value as? AccessoryElectricQuantityResult {
       super.writeByte(171)
       super.writeValue(value.toList())
-    } else if let value = value as? TTFingerprintModel {
+    } else if let value = value as? TTPassageModeModel {
       super.writeByte(172)
       super.writeValue(value.toList())
-    } else if let value = value as? TTGatewayScanModel {
+    } else if let value = value as? TTLockScanModel {
       super.writeByte(173)
       super.writeValue(value.toList())
-    } else if let value = value as? GatewayDeviceInfo {
+    } else if let value = value as? TTPasscodeModel {
       super.writeByte(174)
       super.writeValue(value.toList())
-    } else if let value = value as? TTRemoteAccessoryScanModel {
+    } else if let value = value as? TTICCardModel {
       super.writeByte(175)
       super.writeValue(value.toList())
-    } else if let value = value as? TTStandaloneDoorSensorScanModel {
+    } else if let value = value as? TTFingerprintModel {
       super.writeByte(176)
       super.writeValue(value.toList())
-    } else if let value = value as? TTStandaloneDoorSensorInfo {
+    } else if let value = value as? TTGatewayScanModel {
       super.writeByte(177)
       super.writeValue(value.toList())
-    } else if let value = value as? TTMeterScanModel {
+    } else if let value = value as? GatewayDeviceInfo {
       super.writeByte(178)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWaterMeterInitResult {
+    } else if let value = value as? TTRemoteAccessoryScanModel {
       super.writeByte(179)
       super.writeValue(value.toList())
-    } else if let value = value as? TTElectricMeterInitResult {
+    } else if let value = value as? TTStandaloneDoorSensorScanModel {
       super.writeByte(180)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWifiScanResult {
+    } else if let value = value as? TTStandaloneDoorSensorInfo {
       super.writeByte(181)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWifiScanEntry {
+    } else if let value = value as? TTMeterScanModel {
       super.writeByte(182)
       super.writeValue(value.toList())
-    } else if let value = value as? RemoteKeypadInitResult {
+    } else if let value = value as? TTWaterMeterInitResult {
       super.writeByte(183)
       super.writeValue(value.toList())
-    } else if let value = value as? MultifunctionalKeypadInitResult {
+    } else if let value = value as? TTElectricMeterInitResult {
       super.writeByte(184)
       super.writeValue(value.toList())
-    } else if let value = value as? WaterMeterDeviceInfo {
+    } else if let value = value as? TTWifiScanResult {
       super.writeByte(185)
       super.writeValue(value.toList())
-    } else if let value = value as? AddCardEvent {
+    } else if let value = value as? TTWifiScanEntry {
       super.writeByte(186)
       super.writeValue(value.toList())
-    } else if let value = value as? AddFingerprintEvent {
+    } else if let value = value as? RemoteKeypadInitResult {
       super.writeByte(187)
       super.writeValue(value.toList())
-    } else if let value = value as? AddFaceEvent {
+    } else if let value = value as? MultifunctionalKeypadInitResult {
       super.writeByte(188)
+      super.writeValue(value.toList())
+    } else if let value = value as? WaterMeterDeviceInfo {
+      super.writeByte(189)
+      super.writeValue(value.toList())
+    } else if let value = value as? ElectricMeterDeviceInfo {
+      super.writeByte(190)
+      super.writeValue(value.toList())
+    } else if let value = value as? TTWaterMeterInitParam {
+      super.writeByte(191)
+      super.writeValue(value.toList())
+    } else if let value = value as? TTElectricMeterInitParam {
+      super.writeByte(192)
+      super.writeValue(value.toList())
+    } else if let value = value as? AddCardEvent {
+      super.writeByte(193)
+      super.writeValue(value.toList())
+    } else if let value = value as? AddFingerprintEvent {
+      super.writeByte(194)
+      super.writeValue(value.toList())
+    } else if let value = value as? AddFaceEvent {
+      super.writeByte(195)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -2285,10 +2502,13 @@ protocol TTLockHostApi {
   func setRemoteUnlockSwitchState(isOn: Bool, lockData: String, completion: @escaping (Result<String, Error>) -> Void)
   func getLockConfig(config: TTLockConfig, lockData: String, completion: @escaping (Result<Bool, Error>) -> Void)
   func setLockConfig(config: TTLockConfig, isOn: Bool, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func getLightTime(lockData: String, completion: @escaping (Result<Int64, Error>) -> Void)
+  func setLightTime(seconds: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
   func getLockDirection(lockData: String, completion: @escaping (Result<TTLockDirection, Error>) -> Void)
   func setLockDirection(direction: TTLockDirection, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
   func addPassageMode(type: TTPassageModeType, weekly: [Int64]?, monthly: [Int64]?, startTime: Int64, endTime: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
   func clearAllPassageModes(lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func getPassageModes(lockData: String, completion: @escaping (Result<[TTPassageModeModel], Error>) -> Void)
   func activateLift(floors: String, lockData: String, completion: @escaping (Result<ControlLockResult, Error>) -> Void)
   func setLiftControlable(floors: String, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
   func setLiftWorkMode(type: TTLiftWorkActivateType, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
@@ -2306,6 +2526,7 @@ protocol TTLockHostApi {
   func setSoundVolume(type: TTSoundVolumeType, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
   func getSoundVolume(lockData: String, completion: @escaping (Result<TTSoundVolumeType, Error>) -> Void)
   func setSensitivity(value: TTSensitivityValue, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func getSensitivity(lockData: String, completion: @escaping (Result<TTSensitivityValue, Error>) -> Void)
   func setRemoteKeyValidDate(remoteKeyMac: String, cycleList: [TTCycleModel]?, startDate: Int64, endDate: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
   func addRemoteKey(remoteKeyMac: String, cycleList: [TTCycleModel]?, startDate: Int64, endDate: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
   func deleteRemoteKey(remoteKeyMac: String, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
@@ -3211,6 +3432,41 @@ class TTLockHostApiSetup {
     } else {
       setLockConfigChannel.setMessageHandler(nil)
     }
+    let getLightTimeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.getLightTime\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      getLightTimeChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let lockDataArg = args[0] as! String
+        api.getLightTime(lockData: lockDataArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      getLightTimeChannel.setMessageHandler(nil)
+    }
+    let setLightTimeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.setLightTime\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setLightTimeChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let secondsArg = args[0] as! Int64
+        let lockDataArg = args[1] as! String
+        api.setLightTime(seconds: secondsArg, lockData: lockDataArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      setLightTimeChannel.setMessageHandler(nil)
+    }
     let getLockDirectionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.getLockDirection\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getLockDirectionChannel.setMessageHandler { message, reply in
@@ -3284,6 +3540,23 @@ class TTLockHostApiSetup {
       }
     } else {
       clearAllPassageModesChannel.setMessageHandler(nil)
+    }
+    let getPassageModesChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.getPassageModes\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      getPassageModesChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let lockDataArg = args[0] as! String
+        api.getPassageModes(lockData: lockDataArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      getPassageModesChannel.setMessageHandler(nil)
     }
     let activateLiftChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.activateLift\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
@@ -3593,6 +3866,23 @@ class TTLockHostApiSetup {
       }
     } else {
       setSensitivityChannel.setMessageHandler(nil)
+    }
+    let getSensitivityChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.getSensitivity\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      getSensitivityChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let lockDataArg = args[0] as! String
+        api.getSensitivity(lockData: lockDataArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      getSensitivityChannel.setMessageHandler(nil)
     }
     let setRemoteKeyValidDateChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.setRemoteKeyValidDate\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
@@ -3912,38 +4202,42 @@ protocol TTAccessoryHostApi {
   func standaloneDoorSensorInit(mac: String, info: [String: Any?], completion: @escaping (Result<TTStandaloneDoorSensorInfo, Error>) -> Void)
   func standaloneDoorSensorReadFeatureValue(mac: String, completion: @escaping (Result<String, Error>) -> Void)
   func standaloneDoorSensorIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool
-  func waterMeterConfigServer(url: String, clientId: String, accessToken: String) throws
-  func waterMeterConnect(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func waterMeterDisconnect(mac: String) throws
-  func waterMeterInit(params: [String: Any?], completion: @escaping (Result<TTWaterMeterInitResult, Error>) -> Void)
-  func waterMeterDelete(waterMeterId: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func waterMeterSetPowerOnOff(waterMeterId: String, isOn: Bool, completion: @escaping (Result<Void, Error>) -> Void)
-  func waterMeterSetRemainderM3(waterMeterId: String, remainderM3: Double, completion: @escaping (Result<Void, Error>) -> Void)
-  func waterMeterClearRemainderM3(waterMeterId: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func waterMeterReadData(waterMeterId: String, completion: @escaping (Result<[String: Any?], Error>) -> Void)
-  func waterMeterSetPayMode(waterMeterId: String, payMode: Int64, completion: @escaping (Result<Void, Error>) -> Void)
-  func waterMeterCharge(waterMeterId: String, amount: Double, completion: @escaping (Result<Void, Error>) -> Void)
-  func waterMeterSetTotalUsage(waterMeterId: String, totalM3: Double, completion: @escaping (Result<Void, Error>) -> Void)
-  func waterMeterGetFeatureValue(waterMeterId: String, completion: @escaping (Result<String, Error>) -> Void)
-  func waterMeterGetDeviceInfo(waterMeterId: String, completion: @escaping (Result<WaterMeterDeviceInfo, Error>) -> Void)
-  func waterMeterIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool
-  func waterMeterConfigApn(apn: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func waterMeterConfigMeterServer(ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func waterMeterReset(waterMeterId: String, completion: @escaping (Result<Void, Error>) -> Void)
   func electricMeterConfigServer(url: String, clientId: String, accessToken: String) throws
   func electricMeterConnect(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
   func electricMeterDisconnect(mac: String) throws
-  func electricMeterInit(params: [String: Any?], completion: @escaping (Result<TTElectricMeterInitResult, Error>) -> Void)
-  func electricMeterDelete(electricMeterId: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func electricMeterSetPowerOnOff(electricMeterId: String, isOn: Bool, completion: @escaping (Result<Void, Error>) -> Void)
-  func electricMeterSetRemainderKwh(electricMeterId: String, remainderKwh: Double, completion: @escaping (Result<Void, Error>) -> Void)
-  func electricMeterClearRemainderKwh(electricMeterId: String, completion: @escaping (Result<Void, Error>) -> Void)
-  func electricMeterReadData(electricMeterId: String, completion: @escaping (Result<[String: Any?], Error>) -> Void)
-  func electricMeterSetPayMode(electricMeterId: String, payMode: Int64, completion: @escaping (Result<Void, Error>) -> Void)
-  func electricMeterCharge(electricMeterId: String, amount: Double, completion: @escaping (Result<Void, Error>) -> Void)
-  func electricMeterSetMaxPower(electricMeterId: String, maxPower: Double, completion: @escaping (Result<Void, Error>) -> Void)
-  func electricMeterGetFeatureValue(electricMeterId: String, completion: @escaping (Result<String, Error>) -> Void)
-  func electricMeterIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool
+  func electricMeterInit(params: TTElectricMeterInitParam, completion: @escaping (Result<TTElectricMeterInitResult, Error>) -> Void)
+  func electricMeterDelete(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func electricMeterSetPowerOnOff(mac: String, isOn: Bool, completion: @escaping (Result<Void, Error>) -> Void)
+  func electricMeterSetRemainderKwh(mac: String, remainderKwh: Double, completion: @escaping (Result<Void, Error>) -> Void)
+  func electricMeterClearRemainderKwh(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func electricMeterReadData(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func electricMeterSetPayMode(mac: String, payMode: TTMeterPayMode, price: Double, completion: @escaping (Result<Void, Error>) -> Void)
+  func electricMeterCharge(mac: String, amount: Double, kwh: Double, completion: @escaping (Result<Void, Error>) -> Void)
+  func electricMeterSetMaxPower(mac: String, maxPower: Double, completion: @escaping (Result<Void, Error>) -> Void)
+  func electricMeterGetFeatureValue(mac: String, completion: @escaping (Result<String, Error>) -> Void)
+  func electricMeterIsSupportFunction(featureValue: String, lockFunction: TTElectricMeterFeature) throws -> Bool
+  func electricMeterGetDeviceInfo(mac: String, completion: @escaping (Result<ElectricMeterDeviceInfo, Error>) -> Void)
+  func electricMeterConfigApn(mac: String, apn: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func electricMeterConfigMeterServer(mac: String, ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func electricMeterReset(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterConfigServer(url: String, clientId: String, accessToken: String) throws
+  func waterMeterConnect(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterDisconnect(mac: String) throws
+  func waterMeterInit(params: TTWaterMeterInitParam, completion: @escaping (Result<TTWaterMeterInitResult, Error>) -> Void)
+  func waterMeterDelete(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterSetPowerOnOff(mac: String, isOn: Bool, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterSetRemainderM3(mac: String, remainderM3: Double, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterClearRemainderM3(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterReadData(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterSetPayMode(mac: String, payMode: TTMeterPayMode, price: Double, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterCharge(mac: String, amount: Double, m3: Double, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterSetTotalUsage(mac: String, totalM3: Double, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterGetFeatureValue(mac: String, completion: @escaping (Result<String, Error>) -> Void)
+  func waterMeterGetDeviceInfo(mac: String, completion: @escaping (Result<WaterMeterDeviceInfo, Error>) -> Void)
+  func waterMeterIsSupportFunction(featureValue: String, lockFunction: TTWaterMeterFeature) throws -> Bool
+  func waterMeterConfigApn(mac: String, apn: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterConfigMeterServer(mac: String, ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterReset(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -4142,315 +4436,6 @@ class TTAccessoryHostApiSetup {
     } else {
       standaloneDoorSensorIsSupportFunctionChannel.setMessageHandler(nil)
     }
-    let waterMeterConfigServerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigServer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterConfigServerChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let urlArg = args[0] as! String
-        let clientIdArg = args[1] as! String
-        let accessTokenArg = args[2] as! String
-        do {
-          try api.waterMeterConfigServer(url: urlArg, clientId: clientIdArg, accessToken: accessTokenArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      waterMeterConfigServerChannel.setMessageHandler(nil)
-    }
-    let waterMeterConnectChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConnect\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterConnectChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let macArg = args[0] as! String
-        api.waterMeterConnect(mac: macArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterConnectChannel.setMessageHandler(nil)
-    }
-    let waterMeterDisconnectChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterDisconnect\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterDisconnectChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let macArg = args[0] as! String
-        do {
-          try api.waterMeterDisconnect(mac: macArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      waterMeterDisconnectChannel.setMessageHandler(nil)
-    }
-    let waterMeterInitChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterInit\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterInitChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let paramsArg = args[0] as! [String: Any?]
-        api.waterMeterInit(params: paramsArg) { result in
-          switch result {
-          case .success(let res):
-            reply(wrapResult(res))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterInitChannel.setMessageHandler(nil)
-    }
-    let waterMeterDeleteChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterDelete\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterDeleteChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let waterMeterIdArg = args[0] as! String
-        api.waterMeterDelete(waterMeterId: waterMeterIdArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterDeleteChannel.setMessageHandler(nil)
-    }
-    let waterMeterSetPowerOnOffChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetPowerOnOff\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterSetPowerOnOffChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let waterMeterIdArg = args[0] as! String
-        let isOnArg = args[1] as! Bool
-        api.waterMeterSetPowerOnOff(waterMeterId: waterMeterIdArg, isOn: isOnArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterSetPowerOnOffChannel.setMessageHandler(nil)
-    }
-    let waterMeterSetRemainderM3Channel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetRemainderM3\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterSetRemainderM3Channel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let waterMeterIdArg = args[0] as! String
-        let remainderM3Arg = args[1] as! Double
-        api.waterMeterSetRemainderM3(waterMeterId: waterMeterIdArg, remainderM3: remainderM3Arg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterSetRemainderM3Channel.setMessageHandler(nil)
-    }
-    let waterMeterClearRemainderM3Channel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterClearRemainderM3\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterClearRemainderM3Channel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let waterMeterIdArg = args[0] as! String
-        api.waterMeterClearRemainderM3(waterMeterId: waterMeterIdArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterClearRemainderM3Channel.setMessageHandler(nil)
-    }
-    let waterMeterReadDataChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterReadData\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterReadDataChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let waterMeterIdArg = args[0] as! String
-        api.waterMeterReadData(waterMeterId: waterMeterIdArg) { result in
-          switch result {
-          case .success(let res):
-            reply(wrapResult(res))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterReadDataChannel.setMessageHandler(nil)
-    }
-    let waterMeterSetPayModeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetPayMode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterSetPayModeChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let waterMeterIdArg = args[0] as! String
-        let payModeArg = args[1] as! Int64
-        api.waterMeterSetPayMode(waterMeterId: waterMeterIdArg, payMode: payModeArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterSetPayModeChannel.setMessageHandler(nil)
-    }
-    let waterMeterChargeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterCharge\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterChargeChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let waterMeterIdArg = args[0] as! String
-        let amountArg = args[1] as! Double
-        api.waterMeterCharge(waterMeterId: waterMeterIdArg, amount: amountArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterChargeChannel.setMessageHandler(nil)
-    }
-    let waterMeterSetTotalUsageChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetTotalUsage\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterSetTotalUsageChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let waterMeterIdArg = args[0] as! String
-        let totalM3Arg = args[1] as! Double
-        api.waterMeterSetTotalUsage(waterMeterId: waterMeterIdArg, totalM3: totalM3Arg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterSetTotalUsageChannel.setMessageHandler(nil)
-    }
-    let waterMeterGetFeatureValueChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterGetFeatureValue\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterGetFeatureValueChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let waterMeterIdArg = args[0] as! String
-        api.waterMeterGetFeatureValue(waterMeterId: waterMeterIdArg) { result in
-          switch result {
-          case .success(let res):
-            reply(wrapResult(res))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterGetFeatureValueChannel.setMessageHandler(nil)
-    }
-    let waterMeterGetDeviceInfoChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterGetDeviceInfo\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterGetDeviceInfoChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let waterMeterIdArg = args[0] as! String
-        api.waterMeterGetDeviceInfo(waterMeterId: waterMeterIdArg) { result in
-          switch result {
-          case .success(let res):
-            reply(wrapResult(res))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterGetDeviceInfoChannel.setMessageHandler(nil)
-    }
-    let waterMeterIsSupportFunctionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterIsSupportFunction\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterIsSupportFunctionChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let featureValueArg = args[0] as! String
-        let lockFunctionArg = args[1] as! Int64
-        do {
-          let result = try api.waterMeterIsSupportFunction(featureValue: featureValueArg, lockFunction: lockFunctionArg)
-          reply(wrapResult(result))
-        } catch {
-          reply(wrapError(error))
-        }
-      }
-    } else {
-      waterMeterIsSupportFunctionChannel.setMessageHandler(nil)
-    }
-    let waterMeterConfigApnChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigApn\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterConfigApnChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let apnArg = args[0] as! String
-        api.waterMeterConfigApn(apn: apnArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterConfigApnChannel.setMessageHandler(nil)
-    }
-    let waterMeterConfigMeterServerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigMeterServer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterConfigMeterServerChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let ipArg = args[0] as! String
-        let portArg = args[1] as! String
-        api.waterMeterConfigMeterServer(ip: ipArg, port: portArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterConfigMeterServerChannel.setMessageHandler(nil)
-    }
-    let waterMeterResetChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterReset\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      waterMeterResetChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let waterMeterIdArg = args[0] as! String
-        api.waterMeterReset(waterMeterId: waterMeterIdArg) { result in
-          switch result {
-          case .success:
-            reply(wrapResult(nil))
-          case .failure(let error):
-            reply(wrapError(error))
-          }
-        }
-      }
-    } else {
-      waterMeterResetChannel.setMessageHandler(nil)
-    }
     let electricMeterConfigServerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterConfigServer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       electricMeterConfigServerChannel.setMessageHandler { message, reply in
@@ -4504,7 +4489,7 @@ class TTAccessoryHostApiSetup {
     if let api = api {
       electricMeterInitChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let paramsArg = args[0] as! [String: Any?]
+        let paramsArg = args[0] as! TTElectricMeterInitParam
         api.electricMeterInit(params: paramsArg) { result in
           switch result {
           case .success(let res):
@@ -4521,8 +4506,8 @@ class TTAccessoryHostApiSetup {
     if let api = api {
       electricMeterDeleteChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let electricMeterIdArg = args[0] as! String
-        api.electricMeterDelete(electricMeterId: electricMeterIdArg) { result in
+        let macArg = args[0] as! String
+        api.electricMeterDelete(mac: macArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -4538,9 +4523,9 @@ class TTAccessoryHostApiSetup {
     if let api = api {
       electricMeterSetPowerOnOffChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let electricMeterIdArg = args[0] as! String
+        let macArg = args[0] as! String
         let isOnArg = args[1] as! Bool
-        api.electricMeterSetPowerOnOff(electricMeterId: electricMeterIdArg, isOn: isOnArg) { result in
+        api.electricMeterSetPowerOnOff(mac: macArg, isOn: isOnArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -4556,9 +4541,9 @@ class TTAccessoryHostApiSetup {
     if let api = api {
       electricMeterSetRemainderKwhChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let electricMeterIdArg = args[0] as! String
+        let macArg = args[0] as! String
         let remainderKwhArg = args[1] as! Double
-        api.electricMeterSetRemainderKwh(electricMeterId: electricMeterIdArg, remainderKwh: remainderKwhArg) { result in
+        api.electricMeterSetRemainderKwh(mac: macArg, remainderKwh: remainderKwhArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -4574,8 +4559,8 @@ class TTAccessoryHostApiSetup {
     if let api = api {
       electricMeterClearRemainderKwhChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let electricMeterIdArg = args[0] as! String
-        api.electricMeterClearRemainderKwh(electricMeterId: electricMeterIdArg) { result in
+        let macArg = args[0] as! String
+        api.electricMeterClearRemainderKwh(mac: macArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -4591,11 +4576,11 @@ class TTAccessoryHostApiSetup {
     if let api = api {
       electricMeterReadDataChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let electricMeterIdArg = args[0] as! String
-        api.electricMeterReadData(electricMeterId: electricMeterIdArg) { result in
+        let macArg = args[0] as! String
+        api.electricMeterReadData(mac: macArg) { result in
           switch result {
-          case .success(let res):
-            reply(wrapResult(res))
+          case .success:
+            reply(wrapResult(nil))
           case .failure(let error):
             reply(wrapError(error))
           }
@@ -4608,9 +4593,10 @@ class TTAccessoryHostApiSetup {
     if let api = api {
       electricMeterSetPayModeChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let electricMeterIdArg = args[0] as! String
-        let payModeArg = args[1] as! Int64
-        api.electricMeterSetPayMode(electricMeterId: electricMeterIdArg, payMode: payModeArg) { result in
+        let macArg = args[0] as! String
+        let payModeArg = args[1] as! TTMeterPayMode
+        let priceArg = args[2] as! Double
+        api.electricMeterSetPayMode(mac: macArg, payMode: payModeArg, price: priceArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -4626,9 +4612,10 @@ class TTAccessoryHostApiSetup {
     if let api = api {
       electricMeterChargeChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let electricMeterIdArg = args[0] as! String
+        let macArg = args[0] as! String
         let amountArg = args[1] as! Double
-        api.electricMeterCharge(electricMeterId: electricMeterIdArg, amount: amountArg) { result in
+        let kwhArg = args[2] as! Double
+        api.electricMeterCharge(mac: macArg, amount: amountArg, kwh: kwhArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -4644,9 +4631,9 @@ class TTAccessoryHostApiSetup {
     if let api = api {
       electricMeterSetMaxPowerChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let electricMeterIdArg = args[0] as! String
+        let macArg = args[0] as! String
         let maxPowerArg = args[1] as! Double
-        api.electricMeterSetMaxPower(electricMeterId: electricMeterIdArg, maxPower: maxPowerArg) { result in
+        api.electricMeterSetMaxPower(mac: macArg, maxPower: maxPowerArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -4662,8 +4649,8 @@ class TTAccessoryHostApiSetup {
     if let api = api {
       electricMeterGetFeatureValueChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
-        let electricMeterIdArg = args[0] as! String
-        api.electricMeterGetFeatureValue(electricMeterId: electricMeterIdArg) { result in
+        let macArg = args[0] as! String
+        api.electricMeterGetFeatureValue(mac: macArg) { result in
           switch result {
           case .success(let res):
             reply(wrapResult(res))
@@ -4680,7 +4667,7 @@ class TTAccessoryHostApiSetup {
       electricMeterIsSupportFunctionChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let featureValueArg = args[0] as! String
-        let lockFunctionArg = args[1] as! Int64
+        let lockFunctionArg = args[1] as! TTElectricMeterFeature
         do {
           let result = try api.electricMeterIsSupportFunction(featureValue: featureValueArg, lockFunction: lockFunctionArg)
           reply(wrapResult(result))
@@ -4690,6 +4677,390 @@ class TTAccessoryHostApiSetup {
       }
     } else {
       electricMeterIsSupportFunctionChannel.setMessageHandler(nil)
+    }
+    let electricMeterGetDeviceInfoChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterGetDeviceInfo\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      electricMeterGetDeviceInfoChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        api.electricMeterGetDeviceInfo(mac: macArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      electricMeterGetDeviceInfoChannel.setMessageHandler(nil)
+    }
+    let electricMeterConfigApnChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterConfigApn\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      electricMeterConfigApnChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        let apnArg = args[1] as! String
+        api.electricMeterConfigApn(mac: macArg, apn: apnArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      electricMeterConfigApnChannel.setMessageHandler(nil)
+    }
+    let electricMeterConfigMeterServerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterConfigMeterServer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      electricMeterConfigMeterServerChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        let ipArg = args[1] as! String
+        let portArg = args[2] as! String
+        api.electricMeterConfigMeterServer(mac: macArg, ip: ipArg, port: portArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      electricMeterConfigMeterServerChannel.setMessageHandler(nil)
+    }
+    let electricMeterResetChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterReset\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      electricMeterResetChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        api.electricMeterReset(mac: macArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      electricMeterResetChannel.setMessageHandler(nil)
+    }
+    let waterMeterConfigServerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigServer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterConfigServerChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let urlArg = args[0] as! String
+        let clientIdArg = args[1] as! String
+        let accessTokenArg = args[2] as! String
+        do {
+          try api.waterMeterConfigServer(url: urlArg, clientId: clientIdArg, accessToken: accessTokenArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      waterMeterConfigServerChannel.setMessageHandler(nil)
+    }
+    let waterMeterConnectChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConnect\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterConnectChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        api.waterMeterConnect(mac: macArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterConnectChannel.setMessageHandler(nil)
+    }
+    let waterMeterDisconnectChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterDisconnect\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterDisconnectChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        do {
+          try api.waterMeterDisconnect(mac: macArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      waterMeterDisconnectChannel.setMessageHandler(nil)
+    }
+    let waterMeterInitChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterInit\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterInitChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let paramsArg = args[0] as! TTWaterMeterInitParam
+        api.waterMeterInit(params: paramsArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterInitChannel.setMessageHandler(nil)
+    }
+    let waterMeterDeleteChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterDelete\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterDeleteChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        api.waterMeterDelete(mac: macArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterDeleteChannel.setMessageHandler(nil)
+    }
+    let waterMeterSetPowerOnOffChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetPowerOnOff\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterSetPowerOnOffChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        let isOnArg = args[1] as! Bool
+        api.waterMeterSetPowerOnOff(mac: macArg, isOn: isOnArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterSetPowerOnOffChannel.setMessageHandler(nil)
+    }
+    let waterMeterSetRemainderM3Channel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetRemainderM3\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterSetRemainderM3Channel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        let remainderM3Arg = args[1] as! Double
+        api.waterMeterSetRemainderM3(mac: macArg, remainderM3: remainderM3Arg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterSetRemainderM3Channel.setMessageHandler(nil)
+    }
+    let waterMeterClearRemainderM3Channel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterClearRemainderM3\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterClearRemainderM3Channel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        api.waterMeterClearRemainderM3(mac: macArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterClearRemainderM3Channel.setMessageHandler(nil)
+    }
+    let waterMeterReadDataChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterReadData\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterReadDataChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        api.waterMeterReadData(mac: macArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterReadDataChannel.setMessageHandler(nil)
+    }
+    let waterMeterSetPayModeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetPayMode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterSetPayModeChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        let payModeArg = args[1] as! TTMeterPayMode
+        let priceArg = args[2] as! Double
+        api.waterMeterSetPayMode(mac: macArg, payMode: payModeArg, price: priceArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterSetPayModeChannel.setMessageHandler(nil)
+    }
+    let waterMeterChargeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterCharge\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterChargeChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        let amountArg = args[1] as! Double
+        let m3Arg = args[2] as! Double
+        api.waterMeterCharge(mac: macArg, amount: amountArg, m3: m3Arg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterChargeChannel.setMessageHandler(nil)
+    }
+    let waterMeterSetTotalUsageChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetTotalUsage\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterSetTotalUsageChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        let totalM3Arg = args[1] as! Double
+        api.waterMeterSetTotalUsage(mac: macArg, totalM3: totalM3Arg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterSetTotalUsageChannel.setMessageHandler(nil)
+    }
+    let waterMeterGetFeatureValueChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterGetFeatureValue\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterGetFeatureValueChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        api.waterMeterGetFeatureValue(mac: macArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterGetFeatureValueChannel.setMessageHandler(nil)
+    }
+    let waterMeterGetDeviceInfoChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterGetDeviceInfo\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterGetDeviceInfoChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        api.waterMeterGetDeviceInfo(mac: macArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterGetDeviceInfoChannel.setMessageHandler(nil)
+    }
+    let waterMeterIsSupportFunctionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterIsSupportFunction\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterIsSupportFunctionChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let featureValueArg = args[0] as! String
+        let lockFunctionArg = args[1] as! TTWaterMeterFeature
+        do {
+          let result = try api.waterMeterIsSupportFunction(featureValue: featureValueArg, lockFunction: lockFunctionArg)
+          reply(wrapResult(result))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      waterMeterIsSupportFunctionChannel.setMessageHandler(nil)
+    }
+    let waterMeterConfigApnChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigApn\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterConfigApnChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        let apnArg = args[1] as! String
+        api.waterMeterConfigApn(mac: macArg, apn: apnArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterConfigApnChannel.setMessageHandler(nil)
+    }
+    let waterMeterConfigMeterServerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigMeterServer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterConfigMeterServerChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        let ipArg = args[1] as! String
+        let portArg = args[2] as! String
+        api.waterMeterConfigMeterServer(mac: macArg, ip: ipArg, port: portArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterConfigMeterServerChannel.setMessageHandler(nil)
+    }
+    let waterMeterResetChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterReset\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      waterMeterResetChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let macArg = args[0] as! String
+        api.waterMeterReset(mac: macArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      waterMeterResetChannel.setMessageHandler(nil)
     }
   }
 }
