@@ -41,7 +41,7 @@ private func mapInt64Value(_ data: [String: Any], _ key: String) throws -> Int64
 }
 
 private func lockVersionToJsonString(_ version: TTLockVersion) -> String {
-  var dict: [String: Any] = [
+    let dict: [String: Any] = [
     "protocolType": String(version.protocolType),
     "protocolVersion": String(version.protocolVersion),
     "scene": String(version.scene),
@@ -291,8 +291,8 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   func modifyAdminPasscode(
     adminPasscode: String, lockData: String, completion: @escaping (Result<String?, Error>) -> Void
   ) {
-    TTLock.modifyAdminPasscode(adminPasscode, lockData: lockData) { newLockData in
-      completion(.success(newLockData))
+    TTLock.modifyAdminPasscode(adminPasscode, lockData: lockData) {
+      completion(.success(""))
     } failure: { errorCode, errorMsg in
       completion(
         .failure(
@@ -1069,6 +1069,70 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
           makeLockApiError(operation: "setDoorSensorAlertTime", error: errorCode, message: errorMsg)
         ))
     }
+  }
+
+  func getLightTime(lockData: String, completion: @escaping (Result<Int64, Error>) -> Void) {
+    TTLock.getLightTime(withLockData: lockData) { lightTime in
+      completion(.success(Int64(lightTime)))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(makeLockApiError(operation: "getLightTime", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func setLightTime(
+    seconds: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    TTLock.setLightTime(Int32(truncatingIfNeeded: seconds), lockData: lockData) {
+      completion(.success(()))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(makeLockApiError(operation: "setLightTime", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func getPassageModes(
+    lockData: String, completion: @escaping (Result<[TTPassageModeModel], Error>) -> Void
+  ) {
+    TTLock.getPassageModes(withLockData: lockData) { data in
+        guard let jsonStr = data, let jsonData = jsonStr.data(using: .utf8) else {
+        completion(.success([]))
+        return
+      }
+      do {
+        if let array = try JSONSerialization.jsonObject(with: jsonData) as? [[String: Any]] {
+          let modes = array.map { dict in
+            TTPassageModeModel(
+              type: passageModeTypeRevert((dict["modeType"] as? Int ?? 0) == 1 ? .weekly : .monthly),
+              weekly: (dict["repeatList"] as? [Int64])?.map { $0 },
+              monthly: nil,
+              startDate: (dict["startDate"] as? Int64) ?? 0,
+              endDate: (dict["endDate"] as? Int64) ?? 0
+            )
+          }
+          completion(.success(modes))
+        } else {
+          completion(.success([]))
+        }
+      } catch {
+        completion(.success([]))
+      }
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(makeLockApiError(operation: "getPassageModes", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func getSensitivity(
+    lockData: String, completion: @escaping (Result<TTSensitivityValue, Error>) -> Void
+  ) {
+      TTLock.getSensitivityWithLockData(lockData, success: { sensitivityValue in
+          completion(.success(sensitivityValueRevert(sensitivityValue)))
+        }, failure: { errorCode, errorMsg in
+          completion(
+            .failure(makeLockApiError(operation: "getSensitivity", error: errorCode, message: errorMsg)))
+        })
+     
   }
 
 }
