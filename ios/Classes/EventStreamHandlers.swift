@@ -115,11 +115,11 @@ final class LockAddCardStreamHandlerImpl: LockAddCardStreamHandler {
     TTLock.addICCard(
       withCyclicConfig: config, startDate: slot.startDateMs, endDate: slot.endDateMs, lockData: lockData,
       progress: { state in
-        sink.success(AddCardEvent(isProgress: true, cardNumber: nil))
+        sink.success(AddCardEvent(phase: .waiting, cardNumber: nil))
         _ = state
       },
       success: { cardNumber in
-        sink.success(AddCardEvent(isProgress: false, cardNumber: cardNumber))
+        sink.success(AddCardEvent(phase: .success, cardNumber: cardNumber))
       },
       failure: { code, msg in
         sink.error(
@@ -146,9 +146,10 @@ final class LockAddFingerprintStreamHandlerImpl: LockAddFingerprintStreamHandler
     TTLock.addFingerprint(
       withCyclicConfig: config, startDate: slot.startDateMs, endDate: slot.endDateMs, lockData: lockData,
       progress: { current, total in
+        let phase: TTAddFingerprintPhase = current > 0 ? .collecting : .waiting
         sink.success(
           AddFingerprintEvent(
-            isProgress: true,
+            phase: phase,
             currentCount: Int64(current),
             totalCount: Int64(total),
             fingerprintNumber: nil
@@ -157,7 +158,7 @@ final class LockAddFingerprintStreamHandlerImpl: LockAddFingerprintStreamHandler
       success: { fingerprintNumber in
         sink.success(
           AddFingerprintEvent(
-            isProgress: false,
+            phase: .success,
             currentCount: nil,
             totalCount: nil,
             fingerprintNumber: fingerprintNumber
@@ -189,14 +190,10 @@ final class LockAddFaceStreamHandlerImpl: LockAddFaceStreamHandler {
       withCyclicConfig: config, startDate: slot.startDateMs, endDate: slot.endDateMs, lockData: lockData,
       progress: { state, faceError in
         if state == .canStartAdd || state == .error {
-          let pigeonState: TTFaceState? =
-            state == .canStartAdd
-            ? .canStartAdd
-            : (state == .error ? .error : nil)
+          let phase: TTAddFacePhase = state == .canStartAdd ? .canStartAdd : .error
           sink.success(
             AddFaceEvent(
-              isProgress: true,
-              state: pigeonState,
+              phase: phase,
               errorCode: faceErrorConvert(faceError),
               faceNumber: nil
             ))
@@ -205,8 +202,7 @@ final class LockAddFaceStreamHandlerImpl: LockAddFaceStreamHandler {
       success: { faceNumber in
         sink.success(
           AddFaceEvent(
-            isProgress: false,
-            state: nil,
+            phase: .success,
             errorCode: nil,
             faceNumber: faceNumber
           ))
@@ -349,9 +345,10 @@ final class AccessoryAddKeypadFingerprintStreamHandlerImpl:
       withCyclicConfig: config, startDate: slot.startDateMs, endDate: slot.endDateMs, keypadMac: keypadMac,
       lockData: lockData,
       progress: { current, total in
+        let phase: TTAddFingerprintPhase = current > 0 ? .collecting : .waiting
         sink.success(
           AddFingerprintEvent(
-            isProgress: true,
+            phase: phase,
             currentCount: Int64(current),
             totalCount: Int64(total),
             fingerprintNumber: nil
@@ -360,7 +357,7 @@ final class AccessoryAddKeypadFingerprintStreamHandlerImpl:
       success: { fingerprintNumber in
         sink.success(
           AddFingerprintEvent(
-            isProgress: false,
+            phase: .success,
             currentCount: nil,
             totalCount: nil,
             fingerprintNumber: fingerprintNumber
@@ -398,10 +395,10 @@ final class AccessoryAddKeypadCardStreamHandlerImpl: AccessoryAddKeypadCardStrea
     TTWirelessKeypad.addCard(
       withCyclicConfig: config, startDate: slot.startDateMs, endDate: slot.endDateMs, lockData: lockData,
       progress: { _ in
-        sink.success(AddCardEvent(isProgress: true, cardNumber: nil))
+        sink.success(AddCardEvent(phase: .waiting, cardNumber: nil))
       },
       success: { cardNumber in
-        sink.success(AddCardEvent(isProgress: false, cardNumber: cardNumber))
+        sink.success(AddCardEvent(phase: .success, cardNumber: cardNumber))
       },
       lockFailure: { code, msg in
         sink.error(
