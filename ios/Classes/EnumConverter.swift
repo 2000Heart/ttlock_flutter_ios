@@ -25,6 +25,12 @@ func lockConfigConvert(_ config: TTLockConfig) -> TTLockConfigType {
     return TTLockConfigType.publicMode
   case .lowBatteryAutoUnlock:
     return TTLockConfigType.lowBatteryAutoUnlock
+  case .securityM1Card:
+    return TTLockConfigType.securityM1Card
+  case .semiAutomaticModeControl:
+    return TTLockConfigType.semiAutomaticModeControl
+  case .lockSupervision:
+    return TTLockConfigType.proofCapture
   }
 }
 
@@ -383,6 +389,18 @@ func featureValueConvert(_ lockFunction: TTLockFunction) -> TTLockFeatureValue? 
     return TTLockFeatureValue.securityM1Card
   case .yiShengPhotoFace:
     return TTLockFeatureValue.yiShengPhotoFace
+  case .pictureFaceDelivery:
+    return nil
+  case .supportSetAlias:
+    return nil
+  case .hideWifiCatOneSleepModeSetting:
+    return TTLockFeatureValue.hideSleepMode
+  case .semiAutomaticModeControl:
+    return TTLockFeatureValue.semiAutomaticModeControl
+  case .supportSetUserAttributes:
+    return TTLockFeatureValue.setUserAttributes
+  case .supportSupervision:
+    return TTLockFeatureValue.proofCapture
   }
 }
 
@@ -572,6 +590,29 @@ func faceErrorConvert(_ error: TTLockSDK.TTFaceErrorCode) -> TTFaceErrorCode {
       return .needTiltHeadToRight
   @unknown default:
       return .normal
+  }
+}
+
+func palmVeinErrorConvert(_ error: TTLockSDK.TTPalmVeinErrorCode) -> TTPalmVeinErrorCode {
+  switch error {
+  case .noPalm:
+    return .noPalmVeinDetected
+  case .rectConfidenceLow:
+    return .palmRectConfLow
+  case .landmarkConfidenceLow:
+    return .palmLandmarkConfLow
+  case .angleRoll:
+    return .palmAngleRollError
+  case .angleLean:
+    return .palmAngleLeanError
+  case .plamBlock:
+    return .palmBlock
+  case .plamBlur:
+    return .palmBlur
+  case .plamBack:
+    return .palmBack
+  @unknown default:
+    return .unknownStatus
   }
 }
 

@@ -127,6 +127,7 @@ final class EventContextStore {
   var lockAddCard = LockCredentialSlot()
   var lockAddFingerprint = LockCredentialSlot()
   var lockAddFace = LockCredentialSlot()
+  var lockAddPalmVein = LockCredentialSlot()
   var gatewayGetNearbyWifi = GatewayNearbyWifiSlot()
   var accessoryAddKeypadFingerprint = KeypadCredentialSlot()
   var accessoryAddKeypadCard = KeypadCredentialSlot()

@@ -24,6 +24,8 @@ public final class TtlockFlutterPlugin: NSObject, FlutterPlugin {
       with: registrar.messenger(), streamHandler: LockAddFingerprintStreamHandlerImpl())
     LockAddFaceStreamHandler.register(
       with: registrar.messenger(), streamHandler: LockAddFaceStreamHandlerImpl())
+    LockAddPalmVeinStreamHandler.register(
+      with: registrar.messenger(), streamHandler: LockAddPalmVeinStreamHandlerImpl())
     GatewayStartScanStreamHandler.register(
       with: registrar.messenger(), streamHandler: GatewayStartScanStreamHandlerImpl())
     GatewayGetNearbyWifiStreamHandler.register(
