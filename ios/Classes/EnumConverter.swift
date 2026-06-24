@@ -204,21 +204,6 @@ func sensitivityValueRevert(_ value: TTLockSDK.TTSensitivityValue) -> TTSensitiv
   }
 }
 
-func sensitivityValueRevert(_ value: TTLockSDK.TTSensitivityValue) -> TTSensitivityValue {
-  switch value {
-  case .off:
-    return .off
-  case .low:
-    return .low
-  case .medium:
-    return .medium
-  case .high:
-    return .high
-  @unknown default:
-    return .off
-  }
-}
-
 func remoteAccessoryConvert(_ accessory: TTRemoteAccessory) -> TTLockSDK.TTAccessoryType {
   switch accessory {
   case .remoteKey:

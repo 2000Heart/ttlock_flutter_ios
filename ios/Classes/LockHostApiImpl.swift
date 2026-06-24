@@ -295,7 +295,7 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   func modifyAdminPasscode(
     adminPasscode: String, lockData: String, completion: @escaping (Result<String?, Error>) -> Void
   ) {
-    TTLock.modifyAdminPasscode(adminPasscode, lockData: lockData) {
+      TTLock.modifyAdminPasscode(adminPasscode, lockData: lockData) {_ in 
       completion(.success(""))
     } failure: { errorCode, errorMsg in
       completion(
@@ -574,7 +574,7 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   func setMotorTorqueLevel(
     torqueLevel: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTLock.setMotorTorqueLevel(Int(torqueLevel), lockData: lockData) {
+      TTLock.setMotorTorqueLevel(Int32(Int(torqueLevel)), lockData: lockData) {
       completion(.success(()))
     } failure: { errorCode, errorMsg in
       completion(
@@ -586,7 +586,7 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   func setLockLatchBolt(
     keepTime: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-    TTLock.setLatchBoltWithDriveLevel(-1, keepTime: Int(keepTime), lockData: lockData) {
+      TTLock.setLatchBoltWithDriveLevel(-1, keepTime: Int32(Int(keepTime)), lockData: lockData) {
       completion(.success(()))
     } failure: { errorCode, errorMsg in
       completion(
