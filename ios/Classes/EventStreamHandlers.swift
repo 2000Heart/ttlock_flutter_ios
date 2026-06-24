@@ -218,6 +218,56 @@ final class LockAddFaceStreamHandlerImpl: LockAddFaceStreamHandler {
   override func onCancel(withArguments arguments: Any?) {}
 }
 
+final class LockAddPalmVeinStreamHandlerImpl: LockAddPalmVeinStreamHandler {
+  override func onListen(withArguments arguments: Any?, sink: PigeonEventSink<AddPalmVeinEvent>) {
+    let slot = streamContext.lockAddPalmVein
+    guard let lockData = slot.lockData, !lockData.isEmpty else {
+      sink.error(
+        code: "NO_LOCK_DATA",
+        message: "请先通过 setLockAddPalmVeinParam 设置参数后再使用 lockAddPalmVein",
+        details: nil)
+      return
+    }
+    let config = slot.cyclicConfigForSdk()
+    TTLock.addPalmVein(
+      withCyclicConfig: config, startDate: slot.startDateMs, endDate: slot.endDateMs,
+      lockData: lockData,
+      progress: { state, palmVeinError in
+        if state == .canStartAdd {
+          sink.success(
+            AddPalmVeinEvent(
+              phase: .canStartAdd,
+              errorCode: nil,
+              palmVeinNumber: nil
+            ))
+        } else if state == .error {
+          sink.success(
+            AddPalmVeinEvent(
+              phase: .error,
+              errorCode: palmVeinErrorConvert(palmVeinError),
+              palmVeinNumber: nil
+            ))
+        }
+      },
+      success: { palmVeinNumber in
+        sink.success(
+          AddPalmVeinEvent(
+            phase: .success,
+            errorCode: nil,
+            palmVeinNumber: palmVeinNumber
+          ))
+      },
+      failure: { code, msg in
+        sink.error(
+          code: "\(lockErrorConvert(code).rawValue)",
+          message: msg,
+          details: nil)
+      })
+  }
+
+  override func onCancel(withArguments arguments: Any?) {}
+}
+
 // MARK: - Gateway
 
 final class GatewayStartScanStreamHandlerImpl: GatewayStartScanStreamHandler {

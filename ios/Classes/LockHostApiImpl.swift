@@ -74,6 +74,10 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
     context.lockAddFace.apply(param)
   }
 
+  func setLockAddPalmVeinParam(param: TTLockCredentialEventParam) throws {
+    context.lockAddPalmVein.apply(param)
+  }
+
   func getBluetoothState() throws -> TTBluetoothState {
     // Clear contract: expose native bluetooth state immediately.
 
@@ -291,7 +295,7 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   func modifyAdminPasscode(
     adminPasscode: String, lockData: String, completion: @escaping (Result<String?, Error>) -> Void
   ) {
-      TTLock.modifyAdminPasscode(adminPasscode, lockData: lockData) {_ in 
+    TTLock.modifyAdminPasscode(adminPasscode, lockData: lockData) {
       completion(.success(""))
     } failure: { errorCode, errorMsg in
       completion(
@@ -504,6 +508,90 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
     } failure: { errorCode, errorMsg in
       completion(
         .failure(makeLockApiError(operation: "clearFace", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func modifyPalmVein(
+    palmVeinNumber: String, cycleList: [TTCycleModel]?, startDate: Int64, endDate: Int64,
+    lockData: String, completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    TTLock.modifyPalmVeinValidity(
+      withCyclicConfig: cycleList?.map { $0.toMap() }, palmVeinNumber: palmVeinNumber,
+      startDate: startDate, endDate: endDate, lockData: lockData
+    ) {
+      completion(.success(()))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(
+          makeLockApiError(operation: "modifyPalmVein", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func deletePalmVein(
+    palmVeinNumber: String, lockData: String, completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    TTLock.deletePalmVeinNumber(palmVeinNumber, lockData: lockData) {
+      completion(.success(()))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(
+          makeLockApiError(operation: "deletePalmVein", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func clearPalmVein(lockData: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    TTLock.clearPalmVein(withLockData: lockData) {
+      completion(.success(()))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(makeLockApiError(operation: "clearPalmVein", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func getAllValidPalmVeins(
+    lockData: String, completion: @escaping (Result<[TTPalmVeinModel], Error>) -> Void
+  ) {
+    TTLock.getAllValidPalmVeins(withLockData: lockData) { palmVeins in
+      do {
+        completion(.success(try parseJsonArrayString(palmVeins).map { item in
+          TTPalmVeinModel(
+            palmVeinNumber: try mapStringValue(item, "palmVeinNumber"),
+            startDate: try mapInt64Value(item, "startDate"),
+            endDate: try mapInt64Value(item, "endDate")
+          )
+        }))
+      } catch {
+        completion(.failure(error))
+      }
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(
+          makeLockApiError(
+            operation: "getAllValidPalmVeins", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func setMotorTorqueLevel(
+    torqueLevel: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    TTLock.setMotorTorqueLevel(Int(torqueLevel), lockData: lockData) {
+      completion(.success(()))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(
+          makeLockApiError(operation: "setMotorTorqueLevel", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func setLockLatchBolt(
+    keepTime: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    TTLock.setLatchBoltWithDriveLevel(-1, keepTime: Int(keepTime), lockData: lockData) {
+      completion(.success(()))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(
+          makeLockApiError(operation: "setLockLatchBolt", error: errorCode, message: errorMsg)))
     }
   }
 
@@ -1132,7 +1220,7 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
           completion(
             .failure(makeLockApiError(operation: "getSensitivity", error: errorCode, message: errorMsg)))
         })
-     
+
   }
 
 }
