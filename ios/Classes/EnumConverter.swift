@@ -491,6 +491,36 @@ func lockErrorConvert(_ error: TTLockSDK.TTError) -> TTLockError {
   }
 }
 
+func gatewayTypeConvert(_ type: TTGatewayType) -> TTLockSDK.GatewayType {
+  switch type {
+  case .g2:
+    return .G2
+  case .g3:
+    return .G3
+  case .g4:
+    return .G4
+  case .g5:
+    return .G5
+  case .g6:
+    return .G6
+  }
+}
+
+func gatewayTypeRevert(_ nativeGatewayType: GatewayType) -> TTGatewayType {
+  switch nativeGatewayType {
+  case .G2:
+    return TTGatewayType.G2
+  case .G3:
+    return TTGatewayType.G3
+  case .G4:
+    return TTGatewayType.G4
+  case .G5:
+    return TTGatewayType.G5
+  case .G6:
+    return TTGatewayType.G6
+  }
+}
+
 func gatewayConnectStatusConvert(_ error: TTLockSDK.TTGatewayConnectStatus) -> TTGatewayConnectStatus {
     switch error {
     case .success:

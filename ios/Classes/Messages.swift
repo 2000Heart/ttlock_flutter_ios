@@ -316,11 +316,11 @@ enum TTPowerSaverWorkType: Int {
 }
 
 enum TTGatewayType: Int {
-  case g1 = 0
-  case g2 = 1
-  case g3 = 2
-  case g4 = 3
-  case g5 = 4
+  case g2 = 0
+  case g3 = 1
+  case g4 = 2
+  case g5 = 3
+  case g6 = 4
 }
 
 enum TTGatewayConnectStatus: Int {
@@ -638,7 +638,7 @@ struct TTLockInitParams: Hashable {
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct TTGatewayInitParams: Hashable {
-  var type: Int64
+  var type: TTGatewayType
   var ttlockUid: Int64
   var gatewayName: String? = nil
   var ttlockLoginPassword: String? = nil
@@ -652,7 +652,7 @@ struct TTGatewayInitParams: Hashable {
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
   static func fromList(_ pigeonVar_list: [Any?]) -> TTGatewayInitParams? {
-    let type = pigeonVar_list[0] as! Int64
+    let type = pigeonVar_list[0] as! TTGatewayType
     let ttlockUid = pigeonVar_list[1] as! Int64
     let gatewayName: String? = nilOrValue(pigeonVar_list[2])
     let ttlockLoginPassword: String? = nilOrValue(pigeonVar_list[3])
