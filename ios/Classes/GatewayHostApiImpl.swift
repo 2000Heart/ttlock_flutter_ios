@@ -14,7 +14,7 @@ final class GatewayHostApiImpl: NSObject, TTGatewayHostApi {
     params: TTGatewayInitParams,
     completion: @escaping (Result<GatewayDeviceInfo, any Error>) -> Void
   ) {
-    let gatewayType = params.type + 1
+    let gatewayType = gatewayTypeConvert(params.type)
     var payload: [String: Any] = [
       "SSID": params.wifi,
       "wifiPwd": params.wifiPassword,
@@ -27,7 +27,8 @@ final class GatewayHostApiImpl: NSObject, TTGatewayHostApi {
       "gatewayName": params.gatewayName,
       "branchId": params.branchId,
     ]
-    if gatewayType == 2 || gatewayType == 5 {
+    // G2 / G5 / G6 使用真实 WiFi 与密码；G3 / G4 使用占位值（与 Android initGateway 一致）
+    if params.type == .g3 || params.type == .g4 {
       payload["SSID"] = "1"
       payload["wifiPwd"] = "1"
     }

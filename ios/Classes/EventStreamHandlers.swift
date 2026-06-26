@@ -274,7 +274,7 @@ final class GatewayStartScanStreamHandlerImpl: GatewayStartScanStreamHandler {
   override func onListen(withArguments arguments: Any?, sink: PigeonEventSink<TTGatewayScanModel>) {
     TTGateway.startScanGateway { model in
       guard let m = model else { return }
-      let pigeonType = TTGatewayType(rawValue: Int(m.type.rawValue) - 1) ?? .g2
+      let pigeonType = gatewayTypeRevert(Int(m.type.rawValue))
       sink.success(
         TTGatewayScanModel(
           gatewayName: m.gatewayName ?? "",
