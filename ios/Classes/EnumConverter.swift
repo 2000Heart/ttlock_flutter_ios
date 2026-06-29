@@ -491,33 +491,35 @@ func lockErrorConvert(_ error: TTLockSDK.TTError) -> TTLockError {
   }
 }
 
-func gatewayTypeConvert(_ type: TTGatewayType) -> TTLockSDK.GatewayType {
+func gatewayTypeConvert(_ type: TTGatewayType) -> Int {
   switch type {
   case .g2:
-    return .G2
+    return 2
   case .g3:
-    return .G3
+    return 3
   case .g4:
-    return .G4
+    return 4
   case .g5:
-    return .G5
+    return 5
   case .g6:
-    return .G6
+    return 6
   }
 }
 
-func gatewayTypeRevert(_ nativeGatewayType: GatewayType) -> TTGatewayType {
+func gatewayTypeRevert(_ nativeGatewayType: Int) -> TTGatewayType {
   switch nativeGatewayType {
-  case .G2:
-    return TTGatewayType.G2
-  case .G3:
-    return TTGatewayType.G3
-  case .G4:
-    return TTGatewayType.G4
-  case .G5:
-    return TTGatewayType.G5
-  case .G6:
-    return TTGatewayType.G6
+  case 2:
+    return TTGatewayType.g2
+  case 3:
+    return TTGatewayType.g3
+  case 4:
+    return TTGatewayType.g4
+  case 5:
+    return TTGatewayType.g5
+  case 6:
+    return TTGatewayType.g6
+  default:
+      return TTGatewayType.g2
   }
 }
 
