@@ -12,16 +12,22 @@ private func parseJsonArrayString(_ json: String?) -> [[String: Any]] {
   return array
 }
 
-private func mapStringValue(_ data: [String: Any], _ key: String) throws -> String {
+private func mapStringValue(_ data: [String: Any], _ key: String, operation: String) throws -> String {
   guard let value = data[key] as? String else {
-    throw TtlockPremiseNewArchError.invalidValue("Invalid string value for key: \(key)")
+    throw makeLockApiError(
+      operation: operation,
+      error: TTLockError.invalidParameter,
+      message: "Invalid string value for key: \(key)")
   }
   return value
 }
 
-private func mapInt64Value(_ data: [String: Any], _ key: String) throws -> Int64 {
+private func mapInt64Value(_ data: [String: Any], _ key: String, operation: String) throws -> Int64 {
   guard let value = data[key] else {
-    throw TtlockPremiseNewArchError.invalidValue("Missing int64 value for key: \(key)")
+    throw makeLockApiError(
+      operation: operation,
+      error: TTLockError.invalidParameter,
+      message: "Missing int64 value for key: \(key)")
   }
 
   if let int64Value = value as? Int64 {
@@ -37,7 +43,31 @@ private func mapInt64Value(_ data: [String: Any], _ key: String) throws -> Int64
     return int64Value
   }
 
-  throw TtlockPremiseNewArchError.invalidValue("Invalid int64 value for key: \(key)")
+  throw makeLockApiError(
+    operation: operation,
+    error: TTLockError.invalidParameter,
+    message: "Invalid int64 value for key: \(key)")
+}
+
+private func mapOptionalInt64Value(_ data: [String: Any], _ key: String) -> Int64? {
+  guard let value = data[key], !(value is NSNull) else {
+    return nil
+  }
+
+  if let int64Value = value as? Int64 {
+    return int64Value
+  }
+  if let intValue = value as? Int {
+    return Int64(intValue)
+  }
+  if let numberValue = value as? NSNumber {
+    return numberValue.int64Value
+  }
+  if let stringValue = value as? String, let int64Value = Int64(stringValue) {
+    return int64Value
+  }
+
+  return nil
 }
 
 private func lockVersionToJsonString(_ version: TTLockVersion) -> String {
@@ -248,7 +278,10 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   }
 
   func setErasePasscode(erasePasscode: String, lockData: String) throws {
-    throw TtlockPremiseNewArchError.notImplemented("TODO(chuyi): pending API contract")
+    throw makeLockApiError(
+      operation: "setErasePasscode",
+      error: TTLockError.fail,
+      message: "pending API contract")
   }
 
   func getAllValidPasscodes(
@@ -258,12 +291,12 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
       do {
         completion(.success(try parseJsonArrayString(passcodes).map { item in
           TTPasscodeModel(
-            keyboardPwd: try mapStringValue(item, "keyboardPwd"),
-            newKeyboardPwd: try mapStringValue(item, "newKeyboardPwd"),
-            startDate: try mapInt64Value(item, "startDate"),
-            endDate: try mapInt64Value(item, "endDate"),
-            keyboardPwdType: try mapInt64Value(item, "keyboardPwdType"),
-            cycleType: try mapInt64Value(item, "cycleType")
+            keyboardPwd: try mapStringValue(item, "keyboardPwd", operation: "getAllValidPasscodes"),
+            newKeyboardPwd: try mapStringValue(item, "newKeyboardPwd", operation: "getAllValidPasscodes"),
+            startDate: try mapInt64Value(item, "startDate", operation: "getAllValidPasscodes"),
+            endDate: try mapInt64Value(item, "endDate", operation: "getAllValidPasscodes"),
+            keyboardPwdType: try mapInt64Value(item, "keyboardPwdType", operation: "getAllValidPasscodes"),
+            cycleType: mapOptionalInt64Value(item, "cycleType")
           )
         }))
       } catch {
@@ -295,7 +328,7 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   func modifyAdminPasscode(
     adminPasscode: String, lockData: String, completion: @escaping (Result<String?, Error>) -> Void
   ) {
-      TTLock.modifyAdminPasscode(adminPasscode, lockData: lockData) {_ in 
+      TTLock.modifyAdminPasscode(adminPasscode, lockData: lockData) {_ in
       completion(.success(""))
     } failure: { errorCode, errorMsg in
       completion(
@@ -309,8 +342,10 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   ) {
     completion(
       .failure(
-        TtlockPremiseNewArchError.notImplemented(
-          "getPasscodeVerificationParams is not available in current iOS SDK")))
+        makeLockApiError(
+          operation: "getPasscodeVerificationParams",
+          error: TTLockError.fail,
+          message: "getPasscodeVerificationParams is not available in current iOS SDK")))
   }
 
   func modifyCardValidityPeriod(
@@ -348,9 +383,9 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
       do {
         completion(.success(try parseJsonArrayString(cards).map { item in
           TTICCardModel(
-            cardNumber: try mapStringValue(item, "cardNumber"),
-            startDate: try mapInt64Value(item, "startDate"),
-            endDate: try mapInt64Value(item, "endDate")
+            cardNumber: try mapStringValue(item, "cardNumber", operation: "getAllValidCards"),
+            startDate: try mapInt64Value(item, "startDate", operation: "getAllValidCards"),
+            endDate: try mapInt64Value(item, "endDate", operation: "getAllValidCards")
           )
         }))
       } catch {
@@ -435,9 +470,9 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
       do {
         completion(.success(try parseJsonArrayString(fingerprints).map { item in
           TTFingerprintModel(
-            fingerprintNumber: try mapStringValue(item, "fingerprintNumber"),
-            startDate: try mapInt64Value(item, "startDate"),
-            endDate: try mapInt64Value(item, "endDate")
+            fingerprintNumber: try mapStringValue(item, "fingerprintNumber", operation: "getAllValidFingerprints"),
+            startDate: try mapInt64Value(item, "startDate", operation: "getAllValidFingerprints"),
+            endDate: try mapInt64Value(item, "endDate", operation: "getAllValidFingerprints")
           )
         }))
       } catch {
@@ -555,9 +590,9 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
       do {
         completion(.success(try parseJsonArrayString(palmVeins).map { item in
           TTPalmVeinModel(
-            palmVeinNumber: try mapStringValue(item, "palmVeinNumber"),
-            startDate: try mapInt64Value(item, "startDate"),
-            endDate: try mapInt64Value(item, "endDate")
+            palmVeinNumber: try mapStringValue(item, "palmVeinNumber", operation: "getAllValidPalmVeins"),
+            startDate: try mapInt64Value(item, "startDate", operation: "getAllValidPalmVeins"),
+            endDate: try mapInt64Value(item, "endDate", operation: "getAllValidPalmVeins")
           )
         }))
       } catch {
@@ -574,7 +609,7 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   func setMotorTorqueLevel(
     torqueLevel: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-      TTLock.setMotorTorqueLevel(Int32(Int(torqueLevel)), lockData: lockData) {
+    TTLock.setMotorTorqueLevel(Int32(truncatingIfNeeded: torqueLevel), lockData: lockData) {
       completion(.success(()))
     } failure: { errorCode, errorMsg in
       completion(
@@ -586,7 +621,7 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   func setLockLatchBolt(
     keepTime: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
-      TTLock.setLatchBoltWithDriveLevel(-1, keepTime: Int32(Int(keepTime)), lockData: lockData) {
+    TTLock.setLatchBoltWithDriveLevel(-1, keepTime: Int32(truncatingIfNeeded: keepTime), lockData: lockData) {
       completion(.success(()))
     } failure: { errorCode, errorMsg in
       completion(
@@ -918,7 +953,11 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
     TTLock.getLockVersion(withLockMac: lockMac) { lockVersion in
       guard let lockVersionDict = lockVersion else {
         completion(
-          .failure(TtlockPremiseNewArchError.notImplemented("getLockVersion serialize failed")))
+          .failure(
+            makeLockApiError(
+              operation: "getLockVersion",
+              error: .invalidLockData,
+              message: "getLockVersion serialize failed")))
         return
       }
       completion(
@@ -943,8 +982,10 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   ) {
     completion(
       .failure(
-        TtlockPremiseNewArchError.notImplemented(
-          "setNBServerAddress is not available in current iOS SDK")))
+        makeLockApiError(
+          operation: "setNBServerAddress",
+          error: TTLockError.fail,
+          message: "setNBServerAddress is not available in current iOS SDK")))
   }
 
   func configWifi(

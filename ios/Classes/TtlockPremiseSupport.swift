@@ -1,17 +1,17 @@
 import Foundation
 import TTLockSDK
 
-enum TtlockPremiseNewArchError: Error {
-  case notImplemented(String)
-  case invalidValue(String)
-}
-
 func makeLockApiError(operation: String, error: TTLockSDK.TTError, message: String?)
   -> PigeonError
 {
   let mapped = lockErrorConvert(error)
   let fallback = "\(operation) failed: \(error.rawValue)"
   return PigeonError(code: "\(mapped.rawValue)", message: message ?? fallback, details: operation)
+}
+
+func makeLockApiError(operation: String, error: TTLockError, message: String? = nil) -> PigeonError {
+  let fallback = "\(operation) failed"
+  return PigeonError(code: "\(error.rawValue)", message: message ?? fallback, details: operation)
 }
 
 func makeGatewayApiError(
@@ -66,6 +66,14 @@ func makeMultifunctionalKeypadApiError(
   operation: String, error: TTLockSDK.TTKeypadStatus, message: String? = nil
 ) -> PigeonError {
   let mapped = multifunctionalKeypadErrorConvert(error)
+  let fallback = "\(operation) failed: \(error.rawValue)"
+  return PigeonError(code: "\(mapped.rawValue)", message: message ?? fallback, details: operation)
+}
+
+func makeStandaloneDoorSensorApiError(
+  operation: String, error: TTLockSDK.TTStandaloneDoorSensorError, message: String? = nil
+) -> PigeonError {
+  let mapped = standaloneDoorSensorErrorConvert(error)
   let fallback = "\(operation) failed: \(error.rawValue)"
   return PigeonError(code: "\(mapped.rawValue)", message: message ?? fallback, details: operation)
 }
