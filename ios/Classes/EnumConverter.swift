@@ -773,6 +773,44 @@ func electricMeterFeatureConvert(_ feature: TTElectricMeterFeature) -> TTLockSDK
   }
 }
 
+func standaloneDoorSensorErrorConvert(
+  _ error: TTLockSDK.TTStandaloneDoorSensorError
+) -> TTStandaloneDoorSensorError {
+  switch error {
+  case .bluetoothPowerOff:
+    return .bluetoothPowerOff
+  case .connectTimeout:
+    return .connectTimeout
+  case .disconnect:
+    return .disconnect
+  case .fail:
+    return .failed
+  case .wrongCRC:
+    return .wrongCRC
+  case .wrongSSID:
+    return .wrongSSID
+  case .wrongWifiPassword:
+    return .wrongWifiPassword
+  @unknown default:
+    return .failed
+  }
+}
+
+func standaloneDoorSensorFeatureConvert(
+  _ feature: TTStandaloneDoorSensorFeature
+) -> TTLockSDK.TTStandaloneDoorSensorFeature? {
+  switch feature {
+  case .wifi24G:
+    return .feature24GWifi
+  case .wifi5G:
+    return .feature5GWifi
+  case .authCode:
+    return .featureAuthCode
+  case .alarm:
+    return TTLockSDK.TTStandaloneDoorSensorFeature(rawValue: 3)
+  }
+}
+
 func payModeConvert(_ mode: TTMeterPayMode) -> Int {
   switch mode {
   case .postpaid:

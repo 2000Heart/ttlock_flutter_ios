@@ -15,23 +15,20 @@ final class GatewayHostApiImpl: NSObject, TTGatewayHostApi {
     completion: @escaping (Result<GatewayDeviceInfo, any Error>) -> Void
   ) {
     let gatewayType = gatewayTypeConvert(params.type)
-    var payload: [String: Any] = [
-      "SSID": params.wifi,
-      "wifiPwd": params.wifiPassword,
+    // SDK 对 infoDic 中的字符串字段会调用 length；Swift nil 桥接为 NSNull 会崩溃。
+    let needsWifi = params.type != .g3 && params.type != .g4
+      let payload: [String: Any] = [
+      "SSID": needsWifi ? (params.wifi ?? "") : "1",
+      "wifiPwd": needsWifi ? (params.wifiPassword ?? "") : "1",
       "uid": params.ttlockUid,
-      "userPwd": params.ttlockLoginPassword,
-      "serverAddress": params.serverIp,
-      "portNumber": params.serverPort,
+      "userPwd": params.ttlockLoginPassword ?? "",
+      "serverAddress": params.serverIp ?? "",
+      "portNumber": params.serverPort ?? "",
       "gatewayVersion": gatewayType,
-      "companyId": params.companyId,
-      "gatewayName": params.gatewayName,
-      "branchId": params.branchId,
+      "companyId": params.companyId ?? 0,
+      "gatewayName": params.gatewayName ?? "",
+      "branchId": params.branchId ?? 0,
     ]
-    // G2 / G5 / G6 使用真实 WiFi 与密码；G3 / G4 使用占位值（与 Android initGateway 一致）
-    if params.type == .g3 || params.type == .g4 {
-      payload["SSID"] = "1"
-      payload["wifiPwd"] = "1"
-    }
     TTGateway.initializeGateway(withInfoDic: payload) { systemInfoModel, status in
       if status == .success {
         completion(

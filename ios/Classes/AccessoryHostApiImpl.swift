@@ -138,10 +138,16 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
   }
 
   func standaloneDoorSensorInit(
-    mac: String, info: [String: Any?],
+    params: TTStandaloneDoorSensorInitParams,
     completion: @escaping (Result<TTStandaloneDoorSensorInfo, Error>) -> Void
   ) {
-    TTStandaloneDoorSensor.initWithInfo(info, mac: mac) { initModel in
+    var info: [String: Any] = [
+      "SSID": params.wifiName,
+      "wifiPwd": params.wifiPassword,
+      "serverAddress": params.serverAddress,
+      "portNumber": params.portNumber,
+    ]
+    TTStandaloneDoorSensor.initWithInfo(info, mac: params.mac) { initModel in
       completion(.success(TTStandaloneDoorSensorInfo(
         doorSensorData: initModel.doorSensorData,
         electricQuantity: Int64(initModel.electricQuantity),
@@ -152,11 +158,8 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
         firmwareRevision: initModel.firmwareRevision
       )))
     } failure: { error, errorMsg in
-      completion(.failure(PigeonError(
-        code: "STANDALONE_DOOR_SENSOR_ERROR",
-        message: errorMsg,
-        details: "\(error.rawValue)"
-      )))
+      completion(.failure(makeStandaloneDoorSensorApiError(
+        operation: "accessory.standaloneDoorSensorInit", error: error, message: errorMsg)))
     }
   }
 
@@ -166,16 +169,15 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
     TTStandaloneDoorSensor.getFeatureValue(withMac: mac) { featureValue in
       completion(.success(featureValue))
     } failure: { error, errorMsg in
-      completion(.failure(PigeonError(
-        code: "STANDALONE_DOOR_SENSOR_ERROR",
-        message: errorMsg,
-        details: "\(error.rawValue)"
-      )))
+      completion(.failure(makeStandaloneDoorSensorApiError(
+        operation: "accessory.standaloneDoorSensorReadFeatureValue", error: error, message: errorMsg)))
     }
   }
 
-  func standaloneDoorSensorIsSupportFunction(featureValue: String, lockFunction: Int64) throws -> Bool {
-    guard let feature = TTStandaloneDoorSensorFeature(rawValue: Int(truncatingIfNeeded: lockFunction)) else {
+  func standaloneDoorSensorIsSupportFunction(
+    featureValue: String, lockFunction: TTStandaloneDoorSensorFeature
+  ) throws -> Bool {
+    guard let feature = standaloneDoorSensorFeatureConvert(lockFunction) else {
       return false
     }
     return TTStandaloneDoorSensor.supportFunction(feature, featureValue: featureValue)
