@@ -6457,7 +6457,7 @@ protocol TTAccessoryHostApi {
   /// [featureValue] 设备特征值。
   /// [lockFunction] 待查询的功能项。
   func standaloneDoorSensorIsSupportFunction(featureValue: String, lockFunction: TTStandaloneDoorSensorFeature) throws -> Bool
-  /// 配置电表服务器。
+  /// 配置蓝牙电表服务器。
   ///
   /// [url] 服务器地址。
   /// [clientId] 客户端 ID。
@@ -6532,7 +6532,7 @@ protocol TTAccessoryHostApi {
   /// [mac] 电表 MAC 地址。
   /// [apn] APN 接入点名称。
   func electricMeterConfigApn(mac: String, apn: String, completion: @escaping (Result<Void, Error>) -> Void)
-  /// 配置电表计量服务器。
+  /// 配置4G卡蓝牙电表服务器。
   ///
   /// [mac] 电表 MAC 地址。
   /// [ip] 服务器 IP。
@@ -6542,7 +6542,7 @@ protocol TTAccessoryHostApi {
   ///
   /// [mac] 电表 MAC 地址。
   func electricMeterReset(mac: String, completion: @escaping (Result<Void, Error>) -> Void)
-  /// 配置水表服务器。
+  /// 配置蓝牙水表服务器。
   ///
   /// [url] 服务器地址。
   /// [clientId] 客户端 ID。
@@ -6617,7 +6617,7 @@ protocol TTAccessoryHostApi {
   /// [mac] 水表 MAC 地址。
   /// [apn] APN 接入点名称。
   func waterMeterConfigApn(mac: String, apn: String, completion: @escaping (Result<Void, Error>) -> Void)
-  /// 配置水表计量服务器。
+  /// 配置4G卡蓝牙水表服务器。
   ///
   /// [mac] 水表 MAC 地址。
   /// [ip] 服务器 IP。
@@ -6861,7 +6861,7 @@ class TTAccessoryHostApiSetup {
     } else {
       standaloneDoorSensorIsSupportFunctionChannel.setMessageHandler(nil)
     }
-    /// 配置电表服务器。
+    /// 配置蓝牙电表服务器。
     ///
     /// [url] 服务器地址。
     /// [clientId] 客户端 ID。
@@ -7197,7 +7197,7 @@ class TTAccessoryHostApiSetup {
     } else {
       electricMeterConfigApnChannel.setMessageHandler(nil)
     }
-    /// 配置电表计量服务器。
+    /// 配置4G卡蓝牙电表服务器。
     ///
     /// [mac] 电表 MAC 地址。
     /// [ip] 服务器 IP。
@@ -7241,7 +7241,7 @@ class TTAccessoryHostApiSetup {
     } else {
       electricMeterResetChannel.setMessageHandler(nil)
     }
-    /// 配置水表服务器。
+    /// 配置蓝牙水表服务器。
     ///
     /// [url] 服务器地址。
     /// [clientId] 客户端 ID。
@@ -7577,7 +7577,7 @@ class TTAccessoryHostApiSetup {
     } else {
       waterMeterConfigApnChannel.setMessageHandler(nil)
     }
-    /// 配置水表计量服务器。
+    /// 配置4G卡蓝牙水表服务器。
     ///
     /// [mac] 水表 MAC 地址。
     /// [ip] 服务器 IP。
