@@ -546,7 +546,7 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
     completion: @escaping (Result<Void, Error>) -> Void
   ) {
     TTLock.setAlias(
-      aliasTypeConvert(type), credentialId: credentialId, alias: alias, lockData: lockData
+      with: aliasTypeConvert(type), credentialId: credentialId, alias: alias, lockData: lockData
     ) {
       completion(.success(()))
     } failure: { errorCode, errorMsg in

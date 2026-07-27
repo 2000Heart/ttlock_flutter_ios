@@ -17,7 +17,7 @@ iOS implementation for ttlock_flutter.
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
 #   s.vendored_frameworks = "Frameworks/**/*.framework"
-  s.dependency 'TTLock', '3.6.8'
+  s.dependency 'TTLock', '3.6.14'
   s.static_framework = true
   s.swift_version = '5.0'
 
