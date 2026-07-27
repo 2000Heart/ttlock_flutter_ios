@@ -526,6 +526,35 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
     }
   }
 
+  func addFaceUrl(
+    url: String, cycleList: [TTCycleModel]?, startDate: Int64, endDate: Int64,
+    lockData: String, completion: @escaping (Result<String, Error>) -> Void
+  ) {
+    TTLock.addFaceUrl(
+      url, cyclicConfig: cycleList?.map { $0.toMap() } ?? [], startDate: startDate,
+      endDate: endDate, lockData: lockData
+    ) { faceNumber in
+      completion(.success(faceNumber ?? ""))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(makeLockApiError(operation: "addFaceUrl", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func setAlias(
+    type: TTAliasType, credentialId: String, alias: String, lockData: String,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    TTLock.setAlias(
+      aliasTypeConvert(type), credentialId: credentialId, alias: alias, lockData: lockData
+    ) {
+      completion(.success(()))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(makeLockApiError(operation: "setAlias", error: errorCode, message: errorMsg)))
+    }
+  }
+
   func deleteFace(
     faceNumber: String, lockData: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
