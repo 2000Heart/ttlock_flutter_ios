@@ -624,6 +624,24 @@ enum TTNbAwakeTimeType: Int {
   case interval = 1
 }
 
+/// 凭证别名类型（对应 iOS `TTAliasType`）。
+enum TTAliasType: Int {
+  /// 指纹。
+  case fingerprint = 0
+  /// IC 卡。
+  case card = 1
+  /// 无线钥匙。
+  case wirelessKeyFob = 2
+  /// 人脸。
+  case face = 3
+  /// 掌静脉。
+  case palmVein = 4
+  /// 密码。
+  case passcode = 5
+  /// 二维码。
+  case qrCode = 6
+}
+
 /// 锁功能能力位。
 enum TTLockFunction: Int {
   /// 密码。
@@ -810,6 +828,12 @@ enum TTLockFunction: Int {
   case supportSetUserAttributes = 90
   /// 支持监管。
   case supportSupervision = 91
+  /// 易诺拍照人脸。
+  case yiNuoPhotoFace = 92
+  /// 通过 URL 添加人脸。
+  case urlFace = 93
+  /// 人体存在传感器。
+  case humanPresenceSensor = 94
 }
 
 /// 人脸录入状态。
@@ -3344,138 +3368,144 @@ private class MessagesPigeonCodecReader: FlutterStandardReader {
     case 156:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return TTLockFunction(rawValue: enumResultAsInt)
+        return TTAliasType(rawValue: enumResultAsInt)
       }
       return nil
     case 157:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return TTFaceState(rawValue: enumResultAsInt)
+        return TTLockFunction(rawValue: enumResultAsInt)
       }
       return nil
     case 158:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return TTWaterMeterFeature(rawValue: enumResultAsInt)
+        return TTFaceState(rawValue: enumResultAsInt)
       }
       return nil
     case 159:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return TTElectricMeterFeature(rawValue: enumResultAsInt)
+        return TTWaterMeterFeature(rawValue: enumResultAsInt)
       }
       return nil
     case 160:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return TTStandaloneDoorSensorError(rawValue: enumResultAsInt)
+        return TTElectricMeterFeature(rawValue: enumResultAsInt)
       }
       return nil
     case 161:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return TTStandaloneDoorSensorFeature(rawValue: enumResultAsInt)
+        return TTStandaloneDoorSensorError(rawValue: enumResultAsInt)
       }
       return nil
     case 162:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return TTMeterPayMode(rawValue: enumResultAsInt)
+        return TTStandaloneDoorSensorFeature(rawValue: enumResultAsInt)
       }
       return nil
     case 163:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return TTFaceErrorCode(rawValue: enumResultAsInt)
+        return TTMeterPayMode(rawValue: enumResultAsInt)
       }
       return nil
     case 164:
       let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
       if let enumResultAsInt = enumResultAsInt {
-        return TTPalmVeinErrorCode(rawValue: enumResultAsInt)
+        return TTFaceErrorCode(rawValue: enumResultAsInt)
       }
       return nil
     case 165:
-      return TTLockVersion.fromList(self.readValue() as! [Any?])
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return TTPalmVeinErrorCode(rawValue: enumResultAsInt)
+      }
+      return nil
     case 166:
-      return TTLockInitParams.fromList(self.readValue() as! [Any?])
+      return TTLockVersion.fromList(self.readValue() as! [Any?])
     case 167:
-      return TTGatewayInitParams.fromList(self.readValue() as! [Any?])
+      return TTLockInitParams.fromList(self.readValue() as! [Any?])
     case 168:
-      return TTIpSetting.fromList(self.readValue() as! [Any?])
+      return TTGatewayInitParams.fromList(self.readValue() as! [Any?])
     case 169:
-      return TTCycleModel.fromList(self.readValue() as! [Any?])
+      return TTIpSetting.fromList(self.readValue() as! [Any?])
     case 170:
-      return TTLockScanWifiEventParam.fromList(self.readValue() as! [Any?])
+      return TTCycleModel.fromList(self.readValue() as! [Any?])
     case 171:
-      return TTLockCredentialEventParam.fromList(self.readValue() as! [Any?])
+      return TTLockScanWifiEventParam.fromList(self.readValue() as! [Any?])
     case 172:
-      return TTKeypadCredentialEventParam.fromList(self.readValue() as! [Any?])
+      return TTLockCredentialEventParam.fromList(self.readValue() as! [Any?])
     case 173:
-      return ControlLockResult.fromList(self.readValue() as! [Any?])
+      return TTKeypadCredentialEventParam.fromList(self.readValue() as! [Any?])
     case 174:
-      return AutoLockingTime.fromList(self.readValue() as! [Any?])
+      return ControlLockResult.fromList(self.readValue() as! [Any?])
     case 175:
-      return TTWifiInfoModel.fromList(self.readValue() as! [Any?])
+      return AutoLockingTime.fromList(self.readValue() as! [Any?])
     case 176:
-      return CameraLockWifiResult.fromList(self.readValue() as! [Any?])
+      return TTWifiInfoModel.fromList(self.readValue() as! [Any?])
     case 177:
-      return TTLockSystemModel.fromList(self.readValue() as! [Any?])
+      return CameraLockWifiResult.fromList(self.readValue() as! [Any?])
     case 178:
-      return AccessoryElectricQuantityResult.fromList(self.readValue() as! [Any?])
+      return TTLockSystemModel.fromList(self.readValue() as! [Any?])
     case 179:
-      return TTPassageModeModel.fromList(self.readValue() as! [Any?])
+      return AccessoryElectricQuantityResult.fromList(self.readValue() as! [Any?])
     case 180:
-      return TTLockScanModel.fromList(self.readValue() as! [Any?])
+      return TTPassageModeModel.fromList(self.readValue() as! [Any?])
     case 181:
-      return TTPasscodeModel.fromList(self.readValue() as! [Any?])
+      return TTLockScanModel.fromList(self.readValue() as! [Any?])
     case 182:
-      return TTICCardModel.fromList(self.readValue() as! [Any?])
+      return TTPasscodeModel.fromList(self.readValue() as! [Any?])
     case 183:
-      return TTFingerprintModel.fromList(self.readValue() as! [Any?])
+      return TTICCardModel.fromList(self.readValue() as! [Any?])
     case 184:
-      return TTPalmVeinModel.fromList(self.readValue() as! [Any?])
+      return TTFingerprintModel.fromList(self.readValue() as! [Any?])
     case 185:
-      return TTGatewayScanModel.fromList(self.readValue() as! [Any?])
+      return TTPalmVeinModel.fromList(self.readValue() as! [Any?])
     case 186:
-      return GatewayDeviceInfo.fromList(self.readValue() as! [Any?])
+      return TTGatewayScanModel.fromList(self.readValue() as! [Any?])
     case 187:
-      return TTRemoteAccessoryScanModel.fromList(self.readValue() as! [Any?])
+      return GatewayDeviceInfo.fromList(self.readValue() as! [Any?])
     case 188:
-      return TTStandaloneDoorSensorInitParams.fromList(self.readValue() as! [Any?])
+      return TTRemoteAccessoryScanModel.fromList(self.readValue() as! [Any?])
     case 189:
-      return TTStandaloneDoorSensorScanModel.fromList(self.readValue() as! [Any?])
+      return TTStandaloneDoorSensorInitParams.fromList(self.readValue() as! [Any?])
     case 190:
-      return TTStandaloneDoorSensorInfo.fromList(self.readValue() as! [Any?])
+      return TTStandaloneDoorSensorScanModel.fromList(self.readValue() as! [Any?])
     case 191:
-      return TTMeterScanModel.fromList(self.readValue() as! [Any?])
+      return TTStandaloneDoorSensorInfo.fromList(self.readValue() as! [Any?])
     case 192:
-      return TTWaterMeterInitResult.fromList(self.readValue() as! [Any?])
+      return TTMeterScanModel.fromList(self.readValue() as! [Any?])
     case 193:
-      return TTElectricMeterInitResult.fromList(self.readValue() as! [Any?])
+      return TTWaterMeterInitResult.fromList(self.readValue() as! [Any?])
     case 194:
-      return TTWifiScanResult.fromList(self.readValue() as! [Any?])
+      return TTElectricMeterInitResult.fromList(self.readValue() as! [Any?])
     case 195:
-      return TTWifiScanEntry.fromList(self.readValue() as! [Any?])
+      return TTWifiScanResult.fromList(self.readValue() as! [Any?])
     case 196:
-      return RemoteKeypadInitResult.fromList(self.readValue() as! [Any?])
+      return TTWifiScanEntry.fromList(self.readValue() as! [Any?])
     case 197:
-      return MultifunctionalKeypadInitResult.fromList(self.readValue() as! [Any?])
+      return RemoteKeypadInitResult.fromList(self.readValue() as! [Any?])
     case 198:
-      return WaterMeterDeviceInfo.fromList(self.readValue() as! [Any?])
+      return MultifunctionalKeypadInitResult.fromList(self.readValue() as! [Any?])
     case 199:
-      return ElectricMeterDeviceInfo.fromList(self.readValue() as! [Any?])
+      return WaterMeterDeviceInfo.fromList(self.readValue() as! [Any?])
     case 200:
-      return TTWaterMeterInitParam.fromList(self.readValue() as! [Any?])
+      return ElectricMeterDeviceInfo.fromList(self.readValue() as! [Any?])
     case 201:
-      return TTElectricMeterInitParam.fromList(self.readValue() as! [Any?])
+      return TTWaterMeterInitParam.fromList(self.readValue() as! [Any?])
     case 202:
-      return AddCardEvent.fromList(self.readValue() as! [Any?])
+      return TTElectricMeterInitParam.fromList(self.readValue() as! [Any?])
     case 203:
-      return AddFingerprintEvent.fromList(self.readValue() as! [Any?])
+      return AddCardEvent.fromList(self.readValue() as! [Any?])
     case 204:
-      return AddFaceEvent.fromList(self.readValue() as! [Any?])
+      return AddFingerprintEvent.fromList(self.readValue() as! [Any?])
     case 205:
+      return AddFaceEvent.fromList(self.readValue() as! [Any?])
+    case 206:
       return AddPalmVeinEvent.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -3566,155 +3596,158 @@ private class MessagesPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? TTNbAwakeTimeType {
       super.writeByte(155)
       super.writeValue(value.rawValue)
-    } else if let value = value as? TTLockFunction {
+    } else if let value = value as? TTAliasType {
       super.writeByte(156)
       super.writeValue(value.rawValue)
-    } else if let value = value as? TTFaceState {
+    } else if let value = value as? TTLockFunction {
       super.writeByte(157)
       super.writeValue(value.rawValue)
-    } else if let value = value as? TTWaterMeterFeature {
+    } else if let value = value as? TTFaceState {
       super.writeByte(158)
       super.writeValue(value.rawValue)
-    } else if let value = value as? TTElectricMeterFeature {
+    } else if let value = value as? TTWaterMeterFeature {
       super.writeByte(159)
       super.writeValue(value.rawValue)
-    } else if let value = value as? TTStandaloneDoorSensorError {
+    } else if let value = value as? TTElectricMeterFeature {
       super.writeByte(160)
       super.writeValue(value.rawValue)
-    } else if let value = value as? TTStandaloneDoorSensorFeature {
+    } else if let value = value as? TTStandaloneDoorSensorError {
       super.writeByte(161)
       super.writeValue(value.rawValue)
-    } else if let value = value as? TTMeterPayMode {
+    } else if let value = value as? TTStandaloneDoorSensorFeature {
       super.writeByte(162)
       super.writeValue(value.rawValue)
-    } else if let value = value as? TTFaceErrorCode {
+    } else if let value = value as? TTMeterPayMode {
       super.writeByte(163)
       super.writeValue(value.rawValue)
-    } else if let value = value as? TTPalmVeinErrorCode {
+    } else if let value = value as? TTFaceErrorCode {
       super.writeByte(164)
       super.writeValue(value.rawValue)
-    } else if let value = value as? TTLockVersion {
+    } else if let value = value as? TTPalmVeinErrorCode {
       super.writeByte(165)
-      super.writeValue(value.toList())
-    } else if let value = value as? TTLockInitParams {
+      super.writeValue(value.rawValue)
+    } else if let value = value as? TTLockVersion {
       super.writeByte(166)
       super.writeValue(value.toList())
-    } else if let value = value as? TTGatewayInitParams {
+    } else if let value = value as? TTLockInitParams {
       super.writeByte(167)
       super.writeValue(value.toList())
-    } else if let value = value as? TTIpSetting {
+    } else if let value = value as? TTGatewayInitParams {
       super.writeByte(168)
       super.writeValue(value.toList())
-    } else if let value = value as? TTCycleModel {
+    } else if let value = value as? TTIpSetting {
       super.writeByte(169)
       super.writeValue(value.toList())
-    } else if let value = value as? TTLockScanWifiEventParam {
+    } else if let value = value as? TTCycleModel {
       super.writeByte(170)
       super.writeValue(value.toList())
-    } else if let value = value as? TTLockCredentialEventParam {
+    } else if let value = value as? TTLockScanWifiEventParam {
       super.writeByte(171)
       super.writeValue(value.toList())
-    } else if let value = value as? TTKeypadCredentialEventParam {
+    } else if let value = value as? TTLockCredentialEventParam {
       super.writeByte(172)
       super.writeValue(value.toList())
-    } else if let value = value as? ControlLockResult {
+    } else if let value = value as? TTKeypadCredentialEventParam {
       super.writeByte(173)
       super.writeValue(value.toList())
-    } else if let value = value as? AutoLockingTime {
+    } else if let value = value as? ControlLockResult {
       super.writeByte(174)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWifiInfoModel {
+    } else if let value = value as? AutoLockingTime {
       super.writeByte(175)
       super.writeValue(value.toList())
-    } else if let value = value as? CameraLockWifiResult {
+    } else if let value = value as? TTWifiInfoModel {
       super.writeByte(176)
       super.writeValue(value.toList())
-    } else if let value = value as? TTLockSystemModel {
+    } else if let value = value as? CameraLockWifiResult {
       super.writeByte(177)
       super.writeValue(value.toList())
-    } else if let value = value as? AccessoryElectricQuantityResult {
+    } else if let value = value as? TTLockSystemModel {
       super.writeByte(178)
       super.writeValue(value.toList())
-    } else if let value = value as? TTPassageModeModel {
+    } else if let value = value as? AccessoryElectricQuantityResult {
       super.writeByte(179)
       super.writeValue(value.toList())
-    } else if let value = value as? TTLockScanModel {
+    } else if let value = value as? TTPassageModeModel {
       super.writeByte(180)
       super.writeValue(value.toList())
-    } else if let value = value as? TTPasscodeModel {
+    } else if let value = value as? TTLockScanModel {
       super.writeByte(181)
       super.writeValue(value.toList())
-    } else if let value = value as? TTICCardModel {
+    } else if let value = value as? TTPasscodeModel {
       super.writeByte(182)
       super.writeValue(value.toList())
-    } else if let value = value as? TTFingerprintModel {
+    } else if let value = value as? TTICCardModel {
       super.writeByte(183)
       super.writeValue(value.toList())
-    } else if let value = value as? TTPalmVeinModel {
+    } else if let value = value as? TTFingerprintModel {
       super.writeByte(184)
       super.writeValue(value.toList())
-    } else if let value = value as? TTGatewayScanModel {
+    } else if let value = value as? TTPalmVeinModel {
       super.writeByte(185)
       super.writeValue(value.toList())
-    } else if let value = value as? GatewayDeviceInfo {
+    } else if let value = value as? TTGatewayScanModel {
       super.writeByte(186)
       super.writeValue(value.toList())
-    } else if let value = value as? TTRemoteAccessoryScanModel {
+    } else if let value = value as? GatewayDeviceInfo {
       super.writeByte(187)
       super.writeValue(value.toList())
-    } else if let value = value as? TTStandaloneDoorSensorInitParams {
+    } else if let value = value as? TTRemoteAccessoryScanModel {
       super.writeByte(188)
       super.writeValue(value.toList())
-    } else if let value = value as? TTStandaloneDoorSensorScanModel {
+    } else if let value = value as? TTStandaloneDoorSensorInitParams {
       super.writeByte(189)
       super.writeValue(value.toList())
-    } else if let value = value as? TTStandaloneDoorSensorInfo {
+    } else if let value = value as? TTStandaloneDoorSensorScanModel {
       super.writeByte(190)
       super.writeValue(value.toList())
-    } else if let value = value as? TTMeterScanModel {
+    } else if let value = value as? TTStandaloneDoorSensorInfo {
       super.writeByte(191)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWaterMeterInitResult {
+    } else if let value = value as? TTMeterScanModel {
       super.writeByte(192)
       super.writeValue(value.toList())
-    } else if let value = value as? TTElectricMeterInitResult {
+    } else if let value = value as? TTWaterMeterInitResult {
       super.writeByte(193)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWifiScanResult {
+    } else if let value = value as? TTElectricMeterInitResult {
       super.writeByte(194)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWifiScanEntry {
+    } else if let value = value as? TTWifiScanResult {
       super.writeByte(195)
       super.writeValue(value.toList())
-    } else if let value = value as? RemoteKeypadInitResult {
+    } else if let value = value as? TTWifiScanEntry {
       super.writeByte(196)
       super.writeValue(value.toList())
-    } else if let value = value as? MultifunctionalKeypadInitResult {
+    } else if let value = value as? RemoteKeypadInitResult {
       super.writeByte(197)
       super.writeValue(value.toList())
-    } else if let value = value as? WaterMeterDeviceInfo {
+    } else if let value = value as? MultifunctionalKeypadInitResult {
       super.writeByte(198)
       super.writeValue(value.toList())
-    } else if let value = value as? ElectricMeterDeviceInfo {
+    } else if let value = value as? WaterMeterDeviceInfo {
       super.writeByte(199)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWaterMeterInitParam {
+    } else if let value = value as? ElectricMeterDeviceInfo {
       super.writeByte(200)
       super.writeValue(value.toList())
-    } else if let value = value as? TTElectricMeterInitParam {
+    } else if let value = value as? TTWaterMeterInitParam {
       super.writeByte(201)
       super.writeValue(value.toList())
-    } else if let value = value as? AddCardEvent {
+    } else if let value = value as? TTElectricMeterInitParam {
       super.writeByte(202)
       super.writeValue(value.toList())
-    } else if let value = value as? AddFingerprintEvent {
+    } else if let value = value as? AddCardEvent {
       super.writeByte(203)
       super.writeValue(value.toList())
-    } else if let value = value as? AddFaceEvent {
+    } else if let value = value as? AddFingerprintEvent {
       super.writeByte(204)
       super.writeValue(value.toList())
-    } else if let value = value as? AddPalmVeinEvent {
+    } else if let value = value as? AddFaceEvent {
       super.writeByte(205)
+      super.writeValue(value.toList())
+    } else if let value = value as? AddPalmVeinEvent {
+      super.writeByte(206)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -3932,6 +3965,23 @@ protocol TTLockHostApi {
   /// [faceFeatureData] 人脸特征数据。
   /// [lockData] 锁凭证。
   func addFaceData(cycleList: [TTCycleModel]?, startDate: Int64, endDate: Int64, faceFeatureData: String, lockData: String, completion: @escaping (Result<String, Error>) -> Void)
+  /// 通过图片 URL 添加人脸。
+  ///
+  /// 返回人脸编号。
+  ///
+  /// [url] 人脸图片 URL。
+  /// [cycleList] 周期时间段列表。
+  /// [startDate] 有效期起始时间，毫秒时间戳；永久钥匙传 0。
+  /// [endDate] 有效期结束时间，毫秒时间戳；永久钥匙传 0。
+  /// [lockData] 锁凭证。
+  func addFaceUrl(url: String, cycleList: [TTCycleModel]?, startDate: Int64, endDate: Int64, lockData: String, completion: @escaping (Result<String, Error>) -> Void)
+  /// 为凭证设置别名。
+  ///
+  /// [type] 别名类型（指纹/卡/人脸等）。
+  /// [credentialId] 凭证标识（人脸编号、卡号、密码等）。
+  /// [alias] 别名字符串。
+  /// [lockData] 锁凭证。
+  func setAlias(type: TTAliasType, credentialId: String, alias: String, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
   /// 删除人脸。
   ///
   /// [faceNumber] 人脸编号。
@@ -5006,6 +5056,62 @@ class TTLockHostApiSetup {
       }
     } else {
       addFaceDataChannel.setMessageHandler(nil)
+    }
+    /// 通过图片 URL 添加人脸。
+    ///
+    /// 返回人脸编号。
+    ///
+    /// [url] 人脸图片 URL。
+    /// [cycleList] 周期时间段列表。
+    /// [startDate] 有效期起始时间，毫秒时间戳；永久钥匙传 0。
+    /// [endDate] 有效期结束时间，毫秒时间戳；永久钥匙传 0。
+    /// [lockData] 锁凭证。
+    let addFaceUrlChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.addFaceUrl\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      addFaceUrlChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let urlArg = args[0] as! String
+        let cycleListArg: [TTCycleModel]? = nilOrValue(args[1])
+        let startDateArg = args[2] as! Int64
+        let endDateArg = args[3] as! Int64
+        let lockDataArg = args[4] as! String
+        api.addFaceUrl(url: urlArg, cycleList: cycleListArg, startDate: startDateArg, endDate: endDateArg, lockData: lockDataArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      addFaceUrlChannel.setMessageHandler(nil)
+    }
+    /// 为凭证设置别名。
+    ///
+    /// [type] 别名类型（指纹/卡/人脸等）。
+    /// [credentialId] 凭证标识（人脸编号、卡号、密码等）。
+    /// [alias] 别名字符串。
+    /// [lockData] 锁凭证。
+    let setAliasChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.setAlias\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setAliasChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let typeArg = args[0] as! TTAliasType
+        let credentialIdArg = args[1] as! String
+        let aliasArg = args[2] as! String
+        let lockDataArg = args[3] as! String
+        api.setAlias(type: typeArg, credentialId: credentialIdArg, alias: aliasArg, lockData: lockDataArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      setAliasChannel.setMessageHandler(nil)
     }
     /// 删除人脸。
     ///

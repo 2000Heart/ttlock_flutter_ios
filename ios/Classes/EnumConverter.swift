@@ -392,7 +392,7 @@ func featureValueConvert(_ lockFunction: TTLockFunction) -> TTLockFeatureValue? 
   case .pictureFaceDelivery:
     return nil
   case .supportSetAlias:
-    return nil
+    return TTLockFeatureValue.setAlias
   case .hideWifiCatOneSleepModeSetting:
     return TTLockFeatureValue.hideSleepMode
   case .semiAutomaticModeControl:
@@ -401,6 +401,31 @@ func featureValueConvert(_ lockFunction: TTLockFunction) -> TTLockFeatureValue? 
     return TTLockFeatureValue.setUserAttributes
   case .supportSupervision:
     return TTLockFeatureValue.proofCapture
+  case .yiNuoPhotoFace:
+    return TTLockFeatureValue.yiNuoPhotoFace
+  case .urlFace:
+    return TTLockFeatureValue.urlFace
+  case .humanPresenceSensor:
+    return TTLockFeatureValue.humanPresenceSensor
+  }
+}
+
+func aliasTypeConvert(_ type: TTAliasType) -> TTLockSDK.TTAliasType {
+  switch type {
+  case .fingerprint:
+    return .fingerprint
+  case .card:
+    return .card
+  case .wirelessKeyFob:
+    return .wirelessKeyFob
+  case .face:
+    return .face
+  case .palmVein:
+    return .palmVein
+  case .passcode:
+    return .passcode
+  case .qrCode:
+    return .qrCode
   }
 }
 
