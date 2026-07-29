@@ -493,6 +493,8 @@ func lockErrorConvert(_ error: TTLockSDK.TTError) -> TTLockError {
     return .invalidClientPara
   case .lockIsLocked:
     return .lockIsLocked
+  case .recordExist:
+    return .recordExist
   case .recordNotExist:
     return .recordNotExist
   case .wrongSSID:
