@@ -410,46 +410,48 @@ enum TTLockError: Int {
   case invalidClientPara = 29
   /// 锁已锁定。
   case lockIsLocked = 30
+  /// 记录已存在。
+  case recordExist = 31
   /// 记录不存在。
-  case recordNotExist = 31
+  case recordNotExist = 32
   /// 不支持修改密码。
-  case notSupportModifyPasscode = 32
+  case notSupportModifyPasscode = 33
   /// 蓝牙已关闭。
-  case bluetoothOff = 33
+  case bluetoothOff = 34
   /// 蓝牙连接超时。
-  case bluetoothConnectTimeount = 34
+  case bluetoothConnectTimeount = 35
   /// 蓝牙断开连接。
-  case bluetoothDisconnection = 35
+  case bluetoothDisconnection = 36
   /// 锁正忙。
-  case lockIsBusy = 36
+  case lockIsBusy = 37
   /// 无效的锁数据。
-  case invalidLockData = 37
+  case invalidLockData = 38
   /// 无效参数。
-  case invalidParameter = 38
+  case invalidParameter = 39
   /// WiFi 错误。
-  case wrongWifi = 39
+  case wrongWifi = 40
   /// WiFi 密码错误。
-  case wrongWifiPassword = 40
+  case wrongWifiPassword = 41
   /// 扫描已经开始。
-  case scanFailedAlreadyStart = 41
+  case scanFailedAlreadyStart = 42
   /// 应用注册失败。
-  case scanFailedApplicationRegistrationFailed = 42
+  case scanFailedApplicationRegistrationFailed = 43
   /// 扫描内部错误。
-  case scanFailedInternalError = 43
+  case scanFailedInternalError = 44
   /// 功能不支持。
-  case scanFailedFeatureUnsupported = 44
+  case scanFailedFeatureUnsupported = 45
   /// 硬件资源不足。
-  case scanFailedOutOfHardwareResources = 45
+  case scanFailedOutOfHardwareResources = 46
   /// 无线键盘初始化失败。
-  case initWirelessKeyboardFailed = 46
+  case initWirelessKeyboardFailed = 47
   /// 无线键盘无响应。
-  case wirelessKeyboardNoResponse = 47
+  case wirelessKeyboardNoResponse = 48
   /// 设备连接失败。
-  case deviceConnectFailed = 48
+  case deviceConnectFailed = 49
   /// 签名验证失败。
-  case signatureVerificationFailed = 49
+  case signatureVerificationFailed = 50
   /// 无效的应用。
-  case invalidApplication = 50
+  case invalidApplication = 51
 }
 
 /// 错误所属设备类型。
