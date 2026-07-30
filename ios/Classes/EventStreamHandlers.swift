@@ -88,8 +88,10 @@ final class LockScanWifiStreamHandlerImpl: LockScanWifiStreamHandler {
       return
     }
     TTLock.scanWifi(withLockData: lockData) { isFinished, wifiArr in
-      _ = isFinished
-        sink.success(TTWifiScanResult(wifiList: wifiEntries(from: wifiArr)))
+      sink.success(TTWifiScanResult(wifiList: wifiEntries(from: wifiArr)))
+      if isFinished {
+        sink.endOfStream()
+      }
     } failure: { code, msg in
       sink.error(
         code: "\(lockErrorConvert(code).rawValue)",
@@ -302,8 +304,10 @@ final class GatewayGetNearbyWifiStreamHandlerImpl: GatewayGetNearbyWifiStreamHan
     }
     TTGateway.scanWiFiByGateway { isFinished, wifiArr, status in
       if status.rawValue == 0 {
-          sink.success(TTWifiScanResult(wifiList: wifiEntries(from: wifiArr)))
-        _ = isFinished
+        sink.success(TTWifiScanResult(wifiList: wifiEntries(from: wifiArr)))
+        if isFinished {
+          sink.endOfStream()
+        }
       } else {
         let ge = gatewayErrorConvert(status)
         sink.error(code: "\(ge.rawValue)", message: nil, details: nil)
