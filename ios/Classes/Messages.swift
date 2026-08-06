@@ -4175,8 +4175,9 @@ protocol TTLockHostApi {
   ///
   /// [wifiName] WiFi 名称。
   /// [wifiPassword] WiFi 密码。
+  /// [lockMac] 锁蓝牙 MAC 地址。
   /// [lockData] 锁凭证。
-  func configWifi(wifiName: String, wifiPassword: String, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func configWifi(wifiName: String, wifiPassword: String, lockMac: String, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
   /// 配置服务器。
   ///
   /// [ip] 服务器 IP。
@@ -5933,6 +5934,7 @@ class TTLockHostApiSetup {
     ///
     /// [wifiName] WiFi 名称。
     /// [wifiPassword] WiFi 密码。
+    /// [lockMac] 锁蓝牙 MAC 地址。
     /// [lockData] 锁凭证。
     let configWifiChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.configWifi\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
@@ -5940,8 +5942,9 @@ class TTLockHostApiSetup {
         let args = message as! [Any?]
         let wifiNameArg = args[0] as! String
         let wifiPasswordArg = args[1] as! String
-        let lockDataArg = args[2] as! String
-        api.configWifi(wifiName: wifiNameArg, wifiPassword: wifiPasswordArg, lockData: lockDataArg) { result in
+        let lockMacArg = args[2] as! String
+        let lockDataArg = args[3] as! String
+        api.configWifi(wifiName: wifiNameArg, wifiPassword: wifiPasswordArg, lockMac: lockMacArg, lockData: lockDataArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
