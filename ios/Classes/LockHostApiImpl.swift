@@ -1017,9 +1017,10 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
   }
 
   func configWifi(
-    wifiName: String, wifiPassword: String, lockData: String,
+    wifiName: String, wifiPassword: String, lockMac: String, lockData: String,
     completion: @escaping (Result<Void, Error>) -> Void
   ) {
+    TTLock.cancelOperations(withLockMac: lockMac)
     TTLock.configWifi(withSSID: wifiName, wifiPassword: wifiPassword, lockData: lockData) {
       completion(.success(()))
     } failure: { errorCode, errorMsg in
