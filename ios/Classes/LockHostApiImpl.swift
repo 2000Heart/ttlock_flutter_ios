@@ -1021,11 +1021,14 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
     completion: @escaping (Result<Void, Error>) -> Void
   ) {
     TTLock.cancelOperations(withLockMac: lockMac)
-    TTLock.configWifi(withSSID: wifiName, wifiPassword: wifiPassword, lockData: lockData) {
-      completion(.success(()))
-    } failure: { errorCode, errorMsg in
-      completion(
-        .failure(makeLockApiError(operation: "configWifi", error: errorCode, message: errorMsg)))
+    //延时1秒
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+      TTLock.configWifi(withSSID: wifiName, wifiPassword: wifiPassword, lockData: lockData) {
+        completion(.success(()))
+      } failure: { errorCode, errorMsg in
+        completion(
+          .failure(makeLockApiError(operation: "configWifi", error: errorCode, message: errorMsg)))
+      }
     }
   }
 
