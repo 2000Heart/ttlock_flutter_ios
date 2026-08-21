@@ -2104,6 +2104,52 @@ struct TTPalmVeinModel: Hashable {
   }
 }
 
+/// 二维码信息。
+///
+/// Generated class from Pigeon that represents data sent in messages.
+struct TTQrCodeModel: Hashable {
+  /// 二维码编号。
+  var qrCodeNumber: String
+  /// 有效期起始，毫秒时间戳。
+  var startDate: Int64
+  /// 有效期截止，毫秒时间戳。
+  var endDate: Int64
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> TTQrCodeModel? {
+    let qrCodeNumber = pigeonVar_list[0] as! String
+    let startDate = pigeonVar_list[1] as! Int64
+    let endDate = pigeonVar_list[2] as! Int64
+
+    return TTQrCodeModel(
+      qrCodeNumber: qrCodeNumber,
+      startDate: startDate,
+      endDate: endDate
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      qrCodeNumber,
+      startDate,
+      endDate,
+    ]
+  }
+  static func == (lhs: TTQrCodeModel, rhs: TTQrCodeModel) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return deepEqualsMessages(lhs.qrCodeNumber, rhs.qrCodeNumber) && deepEqualsMessages(lhs.startDate, rhs.startDate) && deepEqualsMessages(lhs.endDate, rhs.endDate)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("TTQrCodeModel")
+    deepHashMessages(value: qrCodeNumber, hasher: &hasher)
+    deepHashMessages(value: startDate, hasher: &hasher)
+    deepHashMessages(value: endDate, hasher: &hasher)
+  }
+}
+
 /// 网关扫描结果。
 ///
 /// Generated class from Pigeon that represents data sent in messages.
@@ -3468,46 +3514,48 @@ private class MessagesPigeonCodecReader: FlutterStandardReader {
     case 185:
       return TTPalmVeinModel.fromList(self.readValue() as! [Any?])
     case 186:
-      return TTGatewayScanModel.fromList(self.readValue() as! [Any?])
+      return TTQrCodeModel.fromList(self.readValue() as! [Any?])
     case 187:
-      return GatewayDeviceInfo.fromList(self.readValue() as! [Any?])
+      return TTGatewayScanModel.fromList(self.readValue() as! [Any?])
     case 188:
-      return TTRemoteAccessoryScanModel.fromList(self.readValue() as! [Any?])
+      return GatewayDeviceInfo.fromList(self.readValue() as! [Any?])
     case 189:
-      return TTStandaloneDoorSensorInitParams.fromList(self.readValue() as! [Any?])
+      return TTRemoteAccessoryScanModel.fromList(self.readValue() as! [Any?])
     case 190:
-      return TTStandaloneDoorSensorScanModel.fromList(self.readValue() as! [Any?])
+      return TTStandaloneDoorSensorInitParams.fromList(self.readValue() as! [Any?])
     case 191:
-      return TTStandaloneDoorSensorInfo.fromList(self.readValue() as! [Any?])
+      return TTStandaloneDoorSensorScanModel.fromList(self.readValue() as! [Any?])
     case 192:
-      return TTMeterScanModel.fromList(self.readValue() as! [Any?])
+      return TTStandaloneDoorSensorInfo.fromList(self.readValue() as! [Any?])
     case 193:
-      return TTWaterMeterInitResult.fromList(self.readValue() as! [Any?])
+      return TTMeterScanModel.fromList(self.readValue() as! [Any?])
     case 194:
-      return TTElectricMeterInitResult.fromList(self.readValue() as! [Any?])
+      return TTWaterMeterInitResult.fromList(self.readValue() as! [Any?])
     case 195:
-      return TTWifiScanResult.fromList(self.readValue() as! [Any?])
+      return TTElectricMeterInitResult.fromList(self.readValue() as! [Any?])
     case 196:
-      return TTWifiScanEntry.fromList(self.readValue() as! [Any?])
+      return TTWifiScanResult.fromList(self.readValue() as! [Any?])
     case 197:
-      return RemoteKeypadInitResult.fromList(self.readValue() as! [Any?])
+      return TTWifiScanEntry.fromList(self.readValue() as! [Any?])
     case 198:
-      return MultifunctionalKeypadInitResult.fromList(self.readValue() as! [Any?])
+      return RemoteKeypadInitResult.fromList(self.readValue() as! [Any?])
     case 199:
-      return WaterMeterDeviceInfo.fromList(self.readValue() as! [Any?])
+      return MultifunctionalKeypadInitResult.fromList(self.readValue() as! [Any?])
     case 200:
-      return ElectricMeterDeviceInfo.fromList(self.readValue() as! [Any?])
+      return WaterMeterDeviceInfo.fromList(self.readValue() as! [Any?])
     case 201:
-      return TTWaterMeterInitParam.fromList(self.readValue() as! [Any?])
+      return ElectricMeterDeviceInfo.fromList(self.readValue() as! [Any?])
     case 202:
-      return TTElectricMeterInitParam.fromList(self.readValue() as! [Any?])
+      return TTWaterMeterInitParam.fromList(self.readValue() as! [Any?])
     case 203:
-      return AddCardEvent.fromList(self.readValue() as! [Any?])
+      return TTElectricMeterInitParam.fromList(self.readValue() as! [Any?])
     case 204:
-      return AddFingerprintEvent.fromList(self.readValue() as! [Any?])
+      return AddCardEvent.fromList(self.readValue() as! [Any?])
     case 205:
-      return AddFaceEvent.fromList(self.readValue() as! [Any?])
+      return AddFingerprintEvent.fromList(self.readValue() as! [Any?])
     case 206:
+      return AddFaceEvent.fromList(self.readValue() as! [Any?])
+    case 207:
       return AddPalmVeinEvent.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
@@ -3688,68 +3736,71 @@ private class MessagesPigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? TTPalmVeinModel {
       super.writeByte(185)
       super.writeValue(value.toList())
-    } else if let value = value as? TTGatewayScanModel {
+    } else if let value = value as? TTQrCodeModel {
       super.writeByte(186)
       super.writeValue(value.toList())
-    } else if let value = value as? GatewayDeviceInfo {
+    } else if let value = value as? TTGatewayScanModel {
       super.writeByte(187)
       super.writeValue(value.toList())
-    } else if let value = value as? TTRemoteAccessoryScanModel {
+    } else if let value = value as? GatewayDeviceInfo {
       super.writeByte(188)
       super.writeValue(value.toList())
-    } else if let value = value as? TTStandaloneDoorSensorInitParams {
+    } else if let value = value as? TTRemoteAccessoryScanModel {
       super.writeByte(189)
       super.writeValue(value.toList())
-    } else if let value = value as? TTStandaloneDoorSensorScanModel {
+    } else if let value = value as? TTStandaloneDoorSensorInitParams {
       super.writeByte(190)
       super.writeValue(value.toList())
-    } else if let value = value as? TTStandaloneDoorSensorInfo {
+    } else if let value = value as? TTStandaloneDoorSensorScanModel {
       super.writeByte(191)
       super.writeValue(value.toList())
-    } else if let value = value as? TTMeterScanModel {
+    } else if let value = value as? TTStandaloneDoorSensorInfo {
       super.writeByte(192)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWaterMeterInitResult {
+    } else if let value = value as? TTMeterScanModel {
       super.writeByte(193)
       super.writeValue(value.toList())
-    } else if let value = value as? TTElectricMeterInitResult {
+    } else if let value = value as? TTWaterMeterInitResult {
       super.writeByte(194)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWifiScanResult {
+    } else if let value = value as? TTElectricMeterInitResult {
       super.writeByte(195)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWifiScanEntry {
+    } else if let value = value as? TTWifiScanResult {
       super.writeByte(196)
       super.writeValue(value.toList())
-    } else if let value = value as? RemoteKeypadInitResult {
+    } else if let value = value as? TTWifiScanEntry {
       super.writeByte(197)
       super.writeValue(value.toList())
-    } else if let value = value as? MultifunctionalKeypadInitResult {
+    } else if let value = value as? RemoteKeypadInitResult {
       super.writeByte(198)
       super.writeValue(value.toList())
-    } else if let value = value as? WaterMeterDeviceInfo {
+    } else if let value = value as? MultifunctionalKeypadInitResult {
       super.writeByte(199)
       super.writeValue(value.toList())
-    } else if let value = value as? ElectricMeterDeviceInfo {
+    } else if let value = value as? WaterMeterDeviceInfo {
       super.writeByte(200)
       super.writeValue(value.toList())
-    } else if let value = value as? TTWaterMeterInitParam {
+    } else if let value = value as? ElectricMeterDeviceInfo {
       super.writeByte(201)
       super.writeValue(value.toList())
-    } else if let value = value as? TTElectricMeterInitParam {
+    } else if let value = value as? TTWaterMeterInitParam {
       super.writeByte(202)
       super.writeValue(value.toList())
-    } else if let value = value as? AddCardEvent {
+    } else if let value = value as? TTElectricMeterInitParam {
       super.writeByte(203)
       super.writeValue(value.toList())
-    } else if let value = value as? AddFingerprintEvent {
+    } else if let value = value as? AddCardEvent {
       super.writeByte(204)
       super.writeValue(value.toList())
-    } else if let value = value as? AddFaceEvent {
+    } else if let value = value as? AddFingerprintEvent {
       super.writeByte(205)
       super.writeValue(value.toList())
-    } else if let value = value as? AddPalmVeinEvent {
+    } else if let value = value as? AddFaceEvent {
       super.writeByte(206)
+      super.writeValue(value.toList())
+    } else if let value = value as? AddPalmVeinEvent {
+      super.writeByte(207)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -4014,6 +4065,36 @@ protocol TTLockHostApi {
   ///
   /// [lockData] 锁凭证。
   func getAllValidPalmVeins(lockData: String, completion: @escaping (Result<[TTPalmVeinModel], Error>) -> Void)
+  /// 添加二维码。
+  ///
+  /// [qrCodeNumber] 二维码编号。
+  /// [cycleList] 周期时间段列表，空或 null 表示无周期。
+  /// [startDate] 有效期起始时间，毫秒时间戳；永久有效时传 0。
+  /// [endDate] 有效期结束时间，毫秒时间戳；永久有效时传 0。
+  /// [lockData] 锁凭证。
+  func addQrCode(qrCodeNumber: String, cycleList: [TTCycleModel]?, startDate: Int64, endDate: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
+  /// 修改二维码有效期。
+  ///
+  /// [qrCodeNumber] 二维码编号。
+  /// [cycleList] 周期时间段列表，空或 null 表示无周期。
+  /// [startDate] 有效期起始时间，毫秒时间戳。
+  /// [endDate] 有效期结束时间，毫秒时间戳。
+  /// [lockData] 锁凭证。
+  func modifyQrCodeValidityPeriod(qrCodeNumber: String, cycleList: [TTCycleModel]?, startDate: Int64, endDate: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
+  /// 删除二维码。
+  ///
+  /// [qrCodeNumber] 二维码编号。
+  /// [endDate] 二维码有效期结束时间，毫秒时间戳。
+  /// [lockData] 锁凭证。
+  func deleteQrCode(qrCodeNumber: String, endDate: Int64, lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
+  /// 清除所有二维码。
+  ///
+  /// [lockData] 锁凭证。
+  func clearAllQrCodes(lockData: String, completion: @escaping (Result<Void, Error>) -> Void)
+  /// 获取所有有效二维码。
+  ///
+  /// [lockData] 锁凭证。
+  func getAllValidQrCodes(lockData: String, completion: @escaping (Result<[TTQrCodeModel], Error>) -> Void)
   /// 设置电机扭矩等级。
   ///
   /// [torqueLevel] 扭矩等级。
@@ -5247,6 +5328,126 @@ class TTLockHostApiSetup {
       }
     } else {
       getAllValidPalmVeinsChannel.setMessageHandler(nil)
+    }
+    /// 添加二维码。
+    ///
+    /// [qrCodeNumber] 二维码编号。
+    /// [cycleList] 周期时间段列表，空或 null 表示无周期。
+    /// [startDate] 有效期起始时间，毫秒时间戳；永久有效时传 0。
+    /// [endDate] 有效期结束时间，毫秒时间戳；永久有效时传 0。
+    /// [lockData] 锁凭证。
+    let addQrCodeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.addQrCode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      addQrCodeChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let qrCodeNumberArg = args[0] as! String
+        let cycleListArg: [TTCycleModel]? = nilOrValue(args[1])
+        let startDateArg = args[2] as! Int64
+        let endDateArg = args[3] as! Int64
+        let lockDataArg = args[4] as! String
+        api.addQrCode(qrCodeNumber: qrCodeNumberArg, cycleList: cycleListArg, startDate: startDateArg, endDate: endDateArg, lockData: lockDataArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      addQrCodeChannel.setMessageHandler(nil)
+    }
+    /// 修改二维码有效期。
+    ///
+    /// [qrCodeNumber] 二维码编号。
+    /// [cycleList] 周期时间段列表，空或 null 表示无周期。
+    /// [startDate] 有效期起始时间，毫秒时间戳。
+    /// [endDate] 有效期结束时间，毫秒时间戳。
+    /// [lockData] 锁凭证。
+    let modifyQrCodeValidityPeriodChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.modifyQrCodeValidityPeriod\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      modifyQrCodeValidityPeriodChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let qrCodeNumberArg = args[0] as! String
+        let cycleListArg: [TTCycleModel]? = nilOrValue(args[1])
+        let startDateArg = args[2] as! Int64
+        let endDateArg = args[3] as! Int64
+        let lockDataArg = args[4] as! String
+        api.modifyQrCodeValidityPeriod(qrCodeNumber: qrCodeNumberArg, cycleList: cycleListArg, startDate: startDateArg, endDate: endDateArg, lockData: lockDataArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      modifyQrCodeValidityPeriodChannel.setMessageHandler(nil)
+    }
+    /// 删除二维码。
+    ///
+    /// [qrCodeNumber] 二维码编号。
+    /// [endDate] 二维码有效期结束时间，毫秒时间戳。
+    /// [lockData] 锁凭证。
+    let deleteQrCodeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.deleteQrCode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      deleteQrCodeChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let qrCodeNumberArg = args[0] as! String
+        let endDateArg = args[1] as! Int64
+        let lockDataArg = args[2] as! String
+        api.deleteQrCode(qrCodeNumber: qrCodeNumberArg, endDate: endDateArg, lockData: lockDataArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      deleteQrCodeChannel.setMessageHandler(nil)
+    }
+    /// 清除所有二维码。
+    ///
+    /// [lockData] 锁凭证。
+    let clearAllQrCodesChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.clearAllQrCodes\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      clearAllQrCodesChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let lockDataArg = args[0] as! String
+        api.clearAllQrCodes(lockData: lockDataArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      clearAllQrCodesChannel.setMessageHandler(nil)
+    }
+    /// 获取所有有效二维码。
+    ///
+    /// [lockData] 锁凭证。
+    let getAllValidQrCodesChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTLockHostApi.getAllValidQrCodes\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      getAllValidQrCodesChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let lockDataArg = args[0] as! String
+        api.getAllValidQrCodes(lockData: lockDataArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      getAllValidQrCodesChannel.setMessageHandler(nil)
     }
     /// 设置电机扭矩等级。
     ///
