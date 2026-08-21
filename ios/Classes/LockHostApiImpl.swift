@@ -22,6 +22,28 @@ private func mapStringValue(_ data: [String: Any], _ key: String, operation: Str
   return value
 }
 
+/// Accepts JSON string or number (QR code numbers are often serialized as integers).
+private func mapStringOrNumberAsString(
+  _ data: [String: Any], _ key: String, operation: String
+) throws -> String {
+  guard let value = data[key] else {
+    throw makeLockApiError(
+      operation: operation,
+      error: TTLockError.invalidParameter,
+      message: "Missing string/number value for key: \(key)")
+  }
+  if let stringValue = value as? String {
+    return stringValue
+  }
+  if let numberValue = value as? NSNumber {
+    return numberValue.stringValue
+  }
+  throw makeLockApiError(
+    operation: operation,
+    error: TTLockError.invalidParameter,
+    message: "Invalid string/number value for key: \(key)")
+}
+
 private func mapInt64Value(_ data: [String: Any], _ key: String, operation: String) throws -> Int64 {
   guard let value = data[key] else {
     throw makeLockApiError(
@@ -631,6 +653,89 @@ final class LockHostApiImpl: NSObject, TTLockHostApi {
         .failure(
           makeLockApiError(
             operation: "getAllValidPalmVeins", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func addQrCode(
+    qrCodeNumber: String, cycleList: [TTCycleModel]?, startDate: Int64, endDate: Int64,
+    lockData: String, completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    TTLock.addQrCode(
+      withCyclicConfig: cycleList?.map { $0.toMap() } ?? [],
+      qrCodeNumber: qrCodeNumber,
+      startDate: startDate,
+      endDate: endDate,
+      lockData: lockData
+    ) {
+      completion(.success(()))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(makeLockApiError(operation: "addQrCode", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func modifyQrCodeValidityPeriod(
+    qrCodeNumber: String, cycleList: [TTCycleModel]?, startDate: Int64, endDate: Int64,
+    lockData: String, completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    TTLock.modifyQrCodeValidity(
+      withCyclicConfig: cycleList?.map { $0.toMap() } ?? [],
+      qrCodeNumber: qrCodeNumber,
+      startDate: startDate,
+      endDate: endDate,
+      lockData: lockData
+    ) {
+      completion(.success(()))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(
+          makeLockApiError(
+            operation: "modifyQrCodeValidityPeriod", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func deleteQrCode(
+    qrCodeNumber: String, endDate: Int64, lockData: String,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    TTLock.deleteQrCodeNumber(qrCodeNumber, endDate: endDate, lockData: lockData) {
+      completion(.success(()))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(makeLockApiError(operation: "deleteQrCode", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func clearAllQrCodes(lockData: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    TTLock.clearQrCode(withLockData: lockData) {
+      completion(.success(()))
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(
+          makeLockApiError(operation: "clearAllQrCodes", error: errorCode, message: errorMsg)))
+    }
+  }
+
+  func getAllValidQrCodes(
+    lockData: String, completion: @escaping (Result<[TTQrCodeModel], Error>) -> Void
+  ) {
+    TTLock.getAllValidQrCodes(withLockData: lockData) { qrCodes in
+      do {
+        completion(.success(try parseJsonArrayString(qrCodes).map { item in
+          TTQrCodeModel(
+            qrCodeNumber: try mapStringOrNumberAsString(
+              item, "number", operation: "getAllValidQrCodes"),
+            startDate: try mapInt64Value(item, "startDate", operation: "getAllValidQrCodes"),
+            endDate: try mapInt64Value(item, "endDate", operation: "getAllValidQrCodes")
+          )
+        }))
+      } catch {
+        completion(.failure(error))
+      }
+    } failure: { errorCode, errorMsg in
+      completion(
+        .failure(
+          makeLockApiError(operation: "getAllValidQrCodes", error: errorCode, message: errorMsg)))
     }
   }
 
