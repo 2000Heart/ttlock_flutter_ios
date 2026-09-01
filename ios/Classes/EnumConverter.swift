@@ -407,6 +407,8 @@ func featureValueConvert(_ lockFunction: TTLockFunction) -> TTLockFeatureValue? 
     return TTLockFeatureValue.urlFace
   case .humanPresenceSensor:
     return TTLockFeatureValue.humanPresenceSensor
+  case .unlockDirection:
+    return TTLockFeatureValue.unlockDirection
   }
 }
 
