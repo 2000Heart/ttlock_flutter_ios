@@ -183,7 +183,7 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
     return TTStandaloneDoorSensor.supportFunction(feature, featureValue: featureValue)
   }
 
-  func waterMeterConfigServer(url: String, clientId: String, accessToken: String) throws {
+  func waterMeterSetClientParam(url: String, clientId: String, accessToken: String) throws {
     TTWaterMeter.setClientParamWithUrl(url, clientId: clientId, accessToken: accessToken)
   }
 
@@ -363,13 +363,13 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
     }
   }
 
-  func waterMeterConfigMeterServer(
+  func waterMeterConfigServer(
     mac: String, ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
     TTWaterMeter.configServer(withMac: mac, serverAddress: ip, portNumber: port) {
       completion(.success(()))
     } failure: { error, errorMsg in
-      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterConfigMeterServer", error: error, message: errorMsg)))
+      completion(.failure(makeWaterMeterApiError(operation: "accessory.waterMeterConfigServer", error: error, message: errorMsg)))
     }
   }
 
@@ -381,7 +381,7 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
     }
   }
 
-  func electricMeterConfigServer(url: String, clientId: String, accessToken: String) throws {
+  func electricMeterSetClientParam(url: String, clientId: String, accessToken: String) throws {
     TTElectricMeter.setClientParamWithUrl(url, clientId: clientId, accessToken: accessToken)
   }
 
@@ -568,7 +568,7 @@ final class AccessoryHostApiImpl: NSObject, TTAccessoryHostApi {
     }
   }
 
-  func electricMeterConfigMeterServer(
+  func electricMeterConfigServer(
     mac: String, ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void
   ) {
     TTElectricMeter.configServer(withMac: mac, serverAddress: ip, portNumber: port) {

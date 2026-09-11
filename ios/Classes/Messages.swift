@@ -6777,7 +6777,7 @@ protocol TTAccessoryHostApi {
   /// [url] 服务器地址。
   /// [clientId] 客户端 ID。
   /// [accessToken] 访问令牌。
-  func electricMeterConfigServer(url: String, clientId: String, accessToken: String) throws
+  func electricMeterSetClientParam(url: String, clientId: String, accessToken: String) throws
   /// 连接电表。
   ///
   /// [mac] 电表 MAC 地址。
@@ -6852,7 +6852,7 @@ protocol TTAccessoryHostApi {
   /// [mac] 电表 MAC 地址。
   /// [ip] 服务器 IP。
   /// [port] 服务器端口。
-  func electricMeterConfigMeterServer(mac: String, ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func electricMeterConfigServer(mac: String, ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void)
   /// 重置电表。
   ///
   /// [mac] 电表 MAC 地址。
@@ -6862,7 +6862,7 @@ protocol TTAccessoryHostApi {
   /// [url] 服务器地址。
   /// [clientId] 客户端 ID。
   /// [accessToken] 访问令牌。
-  func waterMeterConfigServer(url: String, clientId: String, accessToken: String) throws
+  func waterMeterSetClientParam(url: String, clientId: String, accessToken: String) throws
   /// 连接水表。
   ///
   /// [mac] 水表 MAC 地址。
@@ -6937,7 +6937,7 @@ protocol TTAccessoryHostApi {
   /// [mac] 水表 MAC 地址。
   /// [ip] 服务器 IP。
   /// [port] 服务器端口。
-  func waterMeterConfigMeterServer(mac: String, ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void)
+  func waterMeterConfigServer(mac: String, ip: String, port: String, completion: @escaping (Result<Void, Error>) -> Void)
   /// 重置水表。
   ///
   /// [mac] 水表 MAC 地址。
@@ -7181,22 +7181,22 @@ class TTAccessoryHostApiSetup {
     /// [url] 服务器地址。
     /// [clientId] 客户端 ID。
     /// [accessToken] 访问令牌。
-    let electricMeterConfigServerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterConfigServer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let electricMeterSetClientParamChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterSetClientParam\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      electricMeterConfigServerChannel.setMessageHandler { message, reply in
+      electricMeterSetClientParamChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let urlArg = args[0] as! String
         let clientIdArg = args[1] as! String
         let accessTokenArg = args[2] as! String
         do {
-          try api.electricMeterConfigServer(url: urlArg, clientId: clientIdArg, accessToken: accessTokenArg)
+          try api.electricMeterSetClientParam(url: urlArg, clientId: clientIdArg, accessToken: accessTokenArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
         }
       }
     } else {
-      electricMeterConfigServerChannel.setMessageHandler(nil)
+      electricMeterSetClientParamChannel.setMessageHandler(nil)
     }
     /// 连接电表。
     ///
@@ -7517,14 +7517,14 @@ class TTAccessoryHostApiSetup {
     /// [mac] 电表 MAC 地址。
     /// [ip] 服务器 IP。
     /// [port] 服务器端口。
-    let electricMeterConfigMeterServerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterConfigMeterServer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let electricMeterConfigServerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.electricMeterConfigServer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      electricMeterConfigMeterServerChannel.setMessageHandler { message, reply in
+      electricMeterConfigServerChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let macArg = args[0] as! String
         let ipArg = args[1] as! String
         let portArg = args[2] as! String
-        api.electricMeterConfigMeterServer(mac: macArg, ip: ipArg, port: portArg) { result in
+        api.electricMeterConfigServer(mac: macArg, ip: ipArg, port: portArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -7534,7 +7534,7 @@ class TTAccessoryHostApiSetup {
         }
       }
     } else {
-      electricMeterConfigMeterServerChannel.setMessageHandler(nil)
+      electricMeterConfigServerChannel.setMessageHandler(nil)
     }
     /// 重置电表。
     ///
@@ -7561,22 +7561,22 @@ class TTAccessoryHostApiSetup {
     /// [url] 服务器地址。
     /// [clientId] 客户端 ID。
     /// [accessToken] 访问令牌。
-    let waterMeterConfigServerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigServer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let waterMeterSetClientParamChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterSetClientParam\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      waterMeterConfigServerChannel.setMessageHandler { message, reply in
+      waterMeterSetClientParamChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let urlArg = args[0] as! String
         let clientIdArg = args[1] as! String
         let accessTokenArg = args[2] as! String
         do {
-          try api.waterMeterConfigServer(url: urlArg, clientId: clientIdArg, accessToken: accessTokenArg)
+          try api.waterMeterSetClientParam(url: urlArg, clientId: clientIdArg, accessToken: accessTokenArg)
           reply(wrapResult(nil))
         } catch {
           reply(wrapError(error))
         }
       }
     } else {
-      waterMeterConfigServerChannel.setMessageHandler(nil)
+      waterMeterSetClientParamChannel.setMessageHandler(nil)
     }
     /// 连接水表。
     ///
@@ -7897,14 +7897,14 @@ class TTAccessoryHostApiSetup {
     /// [mac] 水表 MAC 地址。
     /// [ip] 服务器 IP。
     /// [port] 服务器端口。
-    let waterMeterConfigMeterServerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigMeterServer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    let waterMeterConfigServerChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.ttlock_flutter.TTAccessoryHostApi.waterMeterConfigServer\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
-      waterMeterConfigMeterServerChannel.setMessageHandler { message, reply in
+      waterMeterConfigServerChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let macArg = args[0] as! String
         let ipArg = args[1] as! String
         let portArg = args[2] as! String
-        api.waterMeterConfigMeterServer(mac: macArg, ip: ipArg, port: portArg) { result in
+        api.waterMeterConfigServer(mac: macArg, ip: ipArg, port: portArg) { result in
           switch result {
           case .success:
             reply(wrapResult(nil))
@@ -7914,7 +7914,7 @@ class TTAccessoryHostApiSetup {
         }
       }
     } else {
-      waterMeterConfigMeterServerChannel.setMessageHandler(nil)
+      waterMeterConfigServerChannel.setMessageHandler(nil)
     }
     /// 重置水表。
     ///

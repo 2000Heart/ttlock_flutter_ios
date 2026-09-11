@@ -4,8 +4,8 @@ PODS:
     - Flutter
   - ttlock_flutter_ios (0.0.1):
     - Flutter
-    - TTLockOnPremise (= 2.2.2)
-  - TTLockOnPremise (2.2.2)
+    - TTLockOnPremise (= 2.2.6)
+  - TTLockOnPremise (2.2.6)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -27,8 +27,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
-  ttlock_flutter_ios: ae9e765981e906c00867a9f47e82695cc7fac320
-  TTLockOnPremise: d232e24622a05cb4b42cc218ec5fa9a886a8baa5
+  ttlock_flutter_ios: 6f2888e249114815e971c91226b43b037281e8c8
+  TTLockOnPremise: 83f181632cb292a3faba32c77c1e13271330dc08
 
 PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
 
