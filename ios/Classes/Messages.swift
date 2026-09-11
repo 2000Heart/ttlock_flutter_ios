@@ -568,6 +568,8 @@ enum TTRemoteAccessoryError: Int {
   case deviceIsBusy = 6
   /// 数据格式错误。
   case dataFormatError = 7
+  /// 操作超时（含 Dart 层 Future.timeout）。
+  case timeout = 8
 }
 
 /// 多功能键盘操作错误码。
@@ -588,6 +590,8 @@ enum TTMultifunctionalKeypadError: Int {
   case keypadConnectFailed = 6
   /// 数据格式错误。
   case dataFormatError = 7
+  /// 操作超时（含 Dart 层 Future.timeout）。
+  case timeout = 8
 }
 
 /// 远程配件类型。
