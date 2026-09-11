@@ -793,14 +793,14 @@ func waterMeterFeatureConvert(_ feature: TTWaterMeterFeature) -> TTLockSDK.TTWat
   }
 }
 
-//func electricMeterFeatureConvert(_ feature: TTElectricMeterFeature) -> TTLockSDK.TTElectricMeterFeature {
-//  switch feature {
-//  case .catOne:
-//      return TTLockSDK.TTElectricMeterFeature.catOne
-//  case .telink:
-//      return TTLockSDK.TTElectricMeterFeature.telink
-//  }
-//}
+func electricMeterFeatureConvert(_ feature: TTElectricMeterFeature) -> TTLockSDK.TTElectricMeterFeature {
+  switch feature {
+  case .catOne:
+      return TTLockSDK.TTElectricMeterFeature.catOne
+  case .telink:
+      return TTLockSDK.TTElectricMeterFeature.telink
+  }
+}
 
 func standaloneDoorSensorErrorConvert(
   _ error: TTLockSDK.TTStandaloneDoorSensorError
