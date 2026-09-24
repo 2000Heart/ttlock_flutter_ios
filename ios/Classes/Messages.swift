@@ -548,6 +548,8 @@ enum TTGatewayError: Int {
   case failedConfigIp = 18
   /// 无效 IP。
   case invalidIp = 19
+  /// 无效参数（含缺参、上下文未设置等）。
+  case invalidParameter = 20
 }
 
 /// 远程配件操作错误码。
@@ -570,6 +572,8 @@ enum TTRemoteAccessoryError: Int {
   case dataFormatError = 7
   /// 操作超时（含 Dart 层 Future.timeout）。
   case timeout = 8
+  /// 无效参数（含缺参、上下文未设置等）。
+  case invalidParameter = 9
 }
 
 /// 多功能键盘操作错误码。
@@ -592,6 +596,8 @@ enum TTMultifunctionalKeypadError: Int {
   case dataFormatError = 7
   /// 操作超时（含 Dart 层 Future.timeout）。
   case timeout = 8
+  /// 无效参数（含缺参、上下文未设置等）。
+  case invalidParameter = 9
 }
 
 /// 远程配件类型。
@@ -897,6 +903,8 @@ enum TTStandaloneDoorSensorError: Int {
   case deviceIsBusy = 12
   /// 数据格式错误。
   case dataFormatError = 13
+  /// 无效参数（含缺参、上下文未设置等）。
+  case invalidParameter = 14
 }
 
 /// 独立门磁功能特性。

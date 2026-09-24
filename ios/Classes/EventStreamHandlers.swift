@@ -82,7 +82,7 @@ final class LockScanWifiStreamHandlerImpl: LockScanWifiStreamHandler {
   override func onListen(withArguments arguments: Any?, sink: PigeonEventSink<TTWifiScanResult>) {
     guard let lockData = streamContext.lockScanWifi.lockData, !lockData.isEmpty else {
       sink.error(
-        code: "NO_LOCK_DATA",
+        code: "\(TTLockError.invalidParameter.rawValue)",
         message: "请先通过 setLockScanWifiParam 设置 lockData 后再使用 lockScanWifi",
         details: nil)
       return
@@ -108,7 +108,7 @@ final class LockAddCardStreamHandlerImpl: LockAddCardStreamHandler {
     let slot = streamContext.lockAddCard
     guard let lockData = slot.lockData, !lockData.isEmpty else {
       sink.error(
-        code: "NO_LOCK_DATA",
+        code: "\(TTLockError.invalidParameter.rawValue)",
         message: "请先通过 setLockAddCardParam 设置参数后再使用 lockAddCard",
         details: nil)
       return
@@ -139,7 +139,7 @@ final class LockAddFingerprintStreamHandlerImpl: LockAddFingerprintStreamHandler
     let slot = streamContext.lockAddFingerprint
     guard let lockData = slot.lockData, !lockData.isEmpty else {
       sink.error(
-        code: "NO_LOCK_DATA",
+        code: "\(TTLockError.invalidParameter.rawValue)",
         message: "请先通过 setLockAddFingerprintParam 设置参数后再使用 lockAddFingerprint",
         details: nil)
       return
@@ -182,7 +182,7 @@ final class LockAddFaceStreamHandlerImpl: LockAddFaceStreamHandler {
     let slot = streamContext.lockAddFace
     guard let lockData = slot.lockData, !lockData.isEmpty else {
       sink.error(
-        code: "NO_LOCK_DATA",
+        code: "\(TTLockError.invalidParameter.rawValue)",
         message: "请先通过 setLockAddFaceParam 设置参数后再使用 lockAddFace",
         details: nil)
       return
@@ -225,7 +225,7 @@ final class LockAddPalmVeinStreamHandlerImpl: LockAddPalmVeinStreamHandler {
     let slot = streamContext.lockAddPalmVein
     guard let lockData = slot.lockData, !lockData.isEmpty else {
       sink.error(
-        code: "NO_LOCK_DATA",
+        code: "\(TTLockError.invalidParameter.rawValue)",
         message: "请先通过 setLockAddPalmVeinParam 设置参数后再使用 lockAddPalmVein",
         details: nil)
       return
@@ -297,7 +297,7 @@ final class GatewayGetNearbyWifiStreamHandlerImpl: GatewayGetNearbyWifiStreamHan
   override func onListen(withArguments arguments: Any?, sink: PigeonEventSink<TTWifiScanResult>) {
     guard let mac = streamContext.gatewayGetNearbyWifi.gatewayMac, !mac.isEmpty else {
       sink.error(
-        code: "NO_GATEWAY",
+        code: "\(TTGatewayError.invalidParameter.rawValue)",
         message: "请先通过 setGatewayGetNearbyWifiParam 设置网关 MAC 后再使用 gatewayGetNearbyWifi",
         details: nil)
       return
@@ -381,14 +381,14 @@ final class AccessoryAddKeypadFingerprintStreamHandlerImpl:
     let slot = streamContext.accessoryAddKeypadFingerprint
     guard let lockData = slot.lockData, !lockData.isEmpty else {
       sink.error(
-        code: "NO_LOCK_DATA",
+        code: "\(TTLockError.invalidParameter.rawValue)",
         message: "请先通过 setAccessoryAddKeypadFingerprintParam 设置 lockData",
         details: nil)
       return
     }
     guard let keypadMac = slot.keypadMac, !keypadMac.isEmpty else {
       sink.error(
-        code: "NO_KEYPAD",
+        code: "\(TTMultifunctionalKeypadError.invalidParameter.rawValue)",
         message: "请先通过 setAccessoryAddKeypadFingerprintParam 设置 keypadMac",
         details: nil)
       return
@@ -440,7 +440,7 @@ final class AccessoryAddKeypadCardStreamHandlerImpl: AccessoryAddKeypadCardStrea
     let slot = streamContext.accessoryAddKeypadCard
     guard let lockData = slot.lockData, !lockData.isEmpty else {
       sink.error(
-        code: "NO_LOCK_DATA",
+        code: "\(TTLockError.invalidParameter.rawValue)",
         message: "请先通过 setAccessoryAddKeypadCardParam 设置 lockData",
         details: nil)
       return
